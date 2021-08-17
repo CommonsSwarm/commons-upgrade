@@ -2,16 +2,17 @@ import { ethers } from "hardhat";
 import ora from "ora";
 import { EVMcrispr, TX_GAS_LIMIT, TX_GAS_PRICE } from "@commonsswarm/evmcrispr";
 import { filterContractEvents } from "../helpers/web3-helpers";
+import { IDisputableVoting } from "../typechain";
 
 let spinner = ora();
 
-const gardensDAOAddress = "0xD1e62b72273Ab3Ed70DE2C6285A1a7C517BA012D";
+const gardensDAOAddress = ""; // Gardens DAO containing disputable voting with the latest vote
 
 const main = async () => {
   const signer = (await ethers.getSigners())[0];
   const evmcrispr = new EVMcrispr(signer, await signer.getChainId());
 
-  spinner = spinner.start(`Encode and forward Commons Upgrade script`);
+  spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
 
   await evmcrispr.connect(gardensDAOAddress);
 
@@ -19,11 +20,11 @@ const main = async () => {
 
   spinner = spinner.start("Execute latest vote");
 
-  const disputableVoting = await ethers.getContractAt(
+  const disputableVoting = (await ethers.getContractAt(
     "IDisputableVoting",
     evmcrispr.app("disputable-voting")(),
     signer
-  );
+  )) as IDisputableVoting;
 
   const votes = await filterContractEvents(disputableVoting, "StartVote");
 
@@ -42,12 +43,16 @@ const main = async () => {
     return;
   }
 
-  await disputableVoting.executeVote(voteId, executionScript, {
-    gasPrice: TX_GAS_PRICE,
-    gasLimit: TX_GAS_LIMIT,
-  });
+  const txReceipt = (
+    await disputableVoting.executeVote(voteId, executionScript, {
+      gasPrice: TX_GAS_PRICE,
+      gasLimit: TX_GAS_LIMIT,
+    })
+  ).wait();
 
-  spinner.succeed();
+  spinner.succeed(
+    `Execute latest vote. Tx hash: ${(await txReceipt).transactionHash}`
+  );
 };
 
 main()

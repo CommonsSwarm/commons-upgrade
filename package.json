@@ -64,7 +64,7 @@
     "account": "hardhat account",
     "commons-upgrade-rinkeby": "hardhat run scripts/commons-upgrade.ts --network rinkeby",
     "commons-upgrade-xdai": "hardhat run scripts/commons-upgrade.ts --network xdai",
-    "execute-latest-vote-rinkeby": "hardhat run scripts/vote-execution.ts --network rinkeby",
-    "execute-latest-vote-xdai": "hardhat run scripts/vote-execution.ts --network xdai"
+    "execute-latest-vote-rinkeby": "hardhat run scripts/execute-latest-vote.ts --network rinkeby",
+    "execute-latest-vote-xdai": "hardhat run scripts/execute-latest-vote.ts --network xdai"
   }
 }
