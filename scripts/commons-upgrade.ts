@@ -235,6 +235,7 @@ async function main() {
 
   spinner = spinner.start(`Encode and forward Commons Upgrade script`);
 
+  // Create and forward evmscript
   const txReceipt = await evmcrispr.forward(
     [
       evmcrispr.installNewApp("agent:new-agent"),
@@ -319,6 +320,7 @@ async function main() {
     `Commons Upgrade script forwarded. Tx hash: ${txReceipt.transactionHash}`
   );
 
+  // Vote on the commons upgrade vote
   await vote(gardenContext);
 }
 
