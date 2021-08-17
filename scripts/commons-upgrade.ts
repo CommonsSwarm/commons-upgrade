@@ -30,9 +30,9 @@ interface GardenContext {
 
 const gardensDAOAddress = ""; // Gardens DAO to be upgraded.
 const hatchMigrationToolsAddress = ""; // Migration tools app installed on the Hatch.
-const entryTribute = 0; // The entry tribute to be deducted from buy order.
-const exitTribute = 0; // The exit tribute to be deducted from sell orders.
-const reserveRatio = 0; // The reserve ratio to be used for that collateral token.
+const entryTribute = 0.1; // The entry tribute to be deducted from buy order.
+const exitTribute = 0.2; // The exit tribute to be deducted from sell orders.
+const reserveRatio = 0.2; // The reserve ratio to be used for that collateral token.
 
 const PPM = 1000000;
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
