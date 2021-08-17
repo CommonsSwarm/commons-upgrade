@@ -1,15 +1,7 @@
-import { BigNumber } from "@ethersproject/bignumber";
-import {
-  EVMcrispr,
-  Action,
-  TX_GAS_LIMIT,
-  TX_GAS_PRICE,
-} from "@commonsswarm/evmcrispr";
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Contract } from "@ethersproject/contracts";
-import { Result } from "@ethersproject/abi";
 import { ethers } from "hardhat";
-import { Address } from "hardhat-deploy/dist/types";
+import ora from "ora";
+import { EVMcrispr, TX_GAS_LIMIT, TX_GAS_PRICE } from "@commonsswarm/evmcrispr";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   ERC20,
   IAgreement,
@@ -18,188 +10,203 @@ import {
   IStakingFactory,
   TokenManager,
 } from "../typechain";
+import {
+  addressesEqual,
+  approveTokenAmount,
+  filterContractEvents,
+} from "../helpers/web3-helpers";
+import { ContractReceipt } from "@ethersproject/contracts";
 
-const toTokens = (amount, decimals = 18) => {
-  const [integer, decimal] = String(amount).split(".");
-  return BigNumber.from(
-    (integer != "0" ? integer : "") + (decimal || "").padEnd(decimals, "0")
-  );
-};
+let spinner = ora();
 
-const gardensDAO = "0xD1e62b72273Ab3Ed70DE2C6285A1a7C517BA012D";
+interface GardenContext {
+  agreement: IAgreement;
+  hookedTokenManager: TokenManager;
+  disputableVoting: IDisputableVoting;
+  signer: SignerWithAddress;
+}
 
-const COLLATERAL_AMOUNT = toTokens(5.1, 18);
+// COMMONS UPGRADE PARAMETERS
 
-const hatchMigrationTools = "0xa1b4da2a85bce4733d50e392b5aaecc74223a926";
-// tDAI
-const collateralToken = "0xFB8F60246D56905866e12443ec0836EBfB3E1F2e";
-const entryTribute = 0.1;
-const exitTribute = 0.2;
-const reserveRatio = 0.2;
+const gardensDAOAddress = ""; // Gardens DAO to be upgraded.
+const hatchMigrationToolsAddress = ""; // Migration tools app installed on the Hatch.
+const entryTribute = 0; // The entry tribute to be deducted from buy order.
+const exitTribute = 0; // The exit tribute to be deducted from sell orders.
+const reserveRatio = 0; // The reserve ratio to be used for that collateral token.
+
 const PPM = 1000000;
 const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
-const filterContractEvents = (
-  contract: Contract,
-  selectedFilter: string,
-  transactionHash?: string
-): Promise<Result> => {
-  return new Promise((resolve, reject) => {
-    const filter = contract.filters[selectedFilter]();
-
-    contract
-      .queryFilter(filter)
-      .then((events) => {
-        if (transactionHash) {
-          const filteredEvent = events.filter(
-            (event) => event.transactionHash === transactionHash
-          );
-          resolve(filteredEvent[0]?.args);
-        } else {
-          resolve(events);
-        }
-      })
-      .catch((err) => reject(err));
-  });
-};
-
-const signAgreement = async (
-  signer: SignerWithAddress,
-  evmcrispr: EVMcrispr
-) => {
-  const getSettingIdAction: Action = evmcrispr
-    .call("agreement")
-    .getCurrentSettingId()();
-  const settingId = await signer.call({ ...getSettingIdAction });
-  const canPerformAction: Action = await evmcrispr
-    .call("agreement")
-    ["canPerform(address,address,bytes32,uint256[])"](
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-      ethers.utils.id("0x0"),
-      [await signer.getAddress()]
-    )();
-  const canPerform = await signer.call({ ...canPerformAction });
-  if (canPerform) {
-    console.log(canPerform);
-    // return;
-  }
-  try {
-    const signAction = await evmcrispr.call("agreement").sign(settingId)();
-    const txReceipt = await (
-      await signer.sendTransaction({ ...signAction })
-    ).wait();
-    console.log(`Sign tx hash: ${txReceipt.transactionHash}`);
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-const checkAllowance = async (
+const buildGardenContext = async (
   evmcrispr: EVMcrispr,
-  holder: Address,
-  tokenAddress: Address,
   signer: SignerWithAddress
-) => {
-  const agreement = (await ethers.getContractAt(
-    "IAgreement",
-    evmcrispr.app("agreement")(),
+): Promise<GardenContext> => {
+  return {
+    agreement: (await ethers.getContractAt(
+      "IAgreement",
+      evmcrispr.app("agreement")(),
+      signer
+    )) as IAgreement,
+    disputableVoting: (await ethers.getContractAt(
+      "IDisputableVoting",
+      evmcrispr.app("disputable-voting")(),
+      signer
+    )) as IDisputableVoting,
+    hookedTokenManager: (await ethers.getContractAt(
+      "TokenManager",
+      evmcrispr.app("wrappable-hooked-token-manager")(),
+      signer
+    )) as TokenManager,
+    signer,
+  };
+};
+
+const signAgreement = async (gardenContext: GardenContext) => {
+  const { agreement, signer } = gardenContext;
+
+  spinner = spinner.start(`Sign community covenant`);
+
+  const settingId = await agreement.getCurrentSettingId();
+  const canPerform = await agreement.canPerform(
+    ZERO_ADDRESS,
+    ZERO_ADDRESS,
+    ethers.utils.id("0x0"),
+    [await signer.getAddress()]
+  );
+
+  if (canPerform) {
+    spinner.succeed();
+    return;
+  }
+
+  const txReceipt = await (await agreement.sign(settingId)).wait();
+
+  spinner.succeed(`Covenant signed. Tx hash: ${txReceipt.transactionHash}`);
+};
+
+const getCollateralRequeriment = async (
+  gardenContext: GardenContext
+): Promise<any> => {
+  const { agreement, disputableVoting } = gardenContext;
+
+  const events = await filterContractEvents(
+    agreement,
+    "CollateralRequirementChanged"
+  );
+
+  const lastEvent = events
+    .filter(({ args }) =>
+      addressesEqual(args.disputable, disputableVoting.address)
+    )
+    .pop();
+
+  if (!lastEvent) {
+    throw new Error("Collateral requeriment id not found");
+  }
+
+  return await agreement.getCollateralRequirement(
+    disputableVoting.address,
+    lastEvent.args.collateralRequirementId
+  );
+};
+
+const stakeTokens = async (gardenContext: GardenContext): Promise<void> => {
+  const { agreement, hookedTokenManager, signer } = gardenContext;
+
+  spinner = spinner.start(`Stake collateral action amount`);
+
+  const signerAddress = await signer.getAddress();
+  const token = (await ethers.getContractAt(
+    "ERC20",
+    await hookedTokenManager.token(),
     signer
-  )) as IAgreement;
+  )) as ERC20;
   const stakingFactory = (await ethers.getContractAt(
     "IStakingFactory",
     await agreement.stakingFactory(),
     signer
   )) as IStakingFactory;
-  const stakingInstanceAddress = await stakingFactory.getInstance(tokenAddress);
-  // const stakingInstanceAddress = await stakingFactory.getInstance(tokenAddress);
   const staking = (await ethers.getContractAt(
     "IStaking",
-    "0x80e9c60be074fdeff137b6eadbed8bc82a15c6bc",
+    await stakingFactory.getInstance(token.address),
     signer
   )) as IStaking;
-  const token = (await ethers.getContractAt(
-    "ERC20",
-    tokenAddress,
-    signer
-  )) as ERC20;
-  const allowance = await token.allowance(holder, staking.address);
-  console.log(
-    await agreement.getCollateralRequirement(ZERO_ADDRESS, toTokens(1, 18))
+  const signerTotalStake = await staking.totalStakedFor(signerAddress);
+  const [, , collateralActionAmount] = await getCollateralRequeriment(
+    gardenContext
   );
-  console.log(allowance.toString());
-  console.log(await (await staking.getBalancesOf(holder)).toString());
-  if (allowance.lt(COLLATERAL_AMOUNT)) {
-    if (!allowance.eq(0)) {
-      await token.approve(staking.address, 0);
-    }
-    await token.approve(staking.address, COLLATERAL_AMOUNT);
+  let txReceipt: ContractReceipt;
+
+  if (signerTotalStake.gte(collateralActionAmount)) {
+    spinner.succeed();
+    return;
   }
 
-  await staking.stake(COLLATERAL_AMOUNT, "0x", {
-    gasLimit: TX_GAS_LIMIT,
-    gasPrice: TX_GAS_PRICE,
-  });
+  spinner = spinner.start(
+    `Approve collateral action amount ${collateralActionAmount}`
+  );
+
+  await approveTokenAmount(
+    token,
+    signerAddress,
+    staking.address,
+    collateralActionAmount
+  );
+
+  spinner = spinner.succeed();
+
+  spinner = spinner.start(
+    `Stake collateral action amount of ${collateralActionAmount}`
+  );
+
+  txReceipt = await (await staking.stake(collateralActionAmount, "0x")).wait();
+
+  spinner = spinner.succeed();
 
   const { _allowance: stakingAllowance } = await staking.getLock(
-    holder,
+    signerAddress,
     agreement.address
   );
 
   if (stakingAllowance.eq(0)) {
-    await staking.allowManager(
-      agreement.address,
-      ethers.constants.MaxInt256,
-      "0x"
-    );
+    spinner = spinner.start(`Allow agreement to lock up balance`);
+
+    txReceipt = await (
+      await staking.allowManager(
+        agreement.address,
+        ethers.constants.MaxInt256,
+        "0x"
+      )
+    ).wait();
+
+    spinner = spinner.succeed();
   }
 };
-const stakeTokens = async (evmcrispr: EVMcrispr, signer: SignerWithAddress) => {
-  const tokenManager = (await ethers.getContractAt(
-    "TokenManager",
-    evmcrispr.app("wrappable-hooked-token-manager")(),
-    signer
-  )) as TokenManager;
-  await checkAllowance(
-    evmcrispr,
-    await signer.getAddress(),
-    await tokenManager.token(),
-    signer
-  );
-};
 
-const vote = async (evmcrispr: EVMcrispr, signer: SignerWithAddress) => {
-  const disputableVotingAddress = evmcrispr.app("disputable-voting")();
-  const disputableVoting = (await ethers.getContractAt(
-    "IDisputableVoting",
-    disputableVotingAddress,
-    signer
-  )) as IDisputableVoting;
-
+const vote = async (gardenContext: GardenContext): Promise<void> => {
+  const { disputableVoting, signer } = gardenContext;
+  const signerAddress = await signer.getAddress();
   const votes = await filterContractEvents(disputableVoting, "StartVote");
-  const vote = votes[votes.length - 1];
+  const {
+    args: { voteId },
+  } = votes.pop();
 
-  const canVote = await disputableVoting.canVote(
-    vote.args.voteId,
-    await signer.getAddress()
-  );
+  const canVote = await disputableVoting.canVote(voteId, signerAddress);
 
   if (canVote) {
-    await disputableVoting.vote(vote.args.voteId, true, {
-      gasPrice: TX_GAS_PRICE,
-      gasLimit: TX_GAS_LIMIT,
-    });
-  }
+    spinner = spinner.start(
+      `Vote yes on Commons Upgrade vote with id ${voteId}`
+    );
 
-  const canExecute = await disputableVoting.canExecute(vote.args.voteId);
-  if (canExecute) {
-    await disputableVoting.executeVote(
-      vote.args.voteId,
-      vote.args.executionScript,
-      {
+    const txReceipt = await (
+      await disputableVoting.vote(voteId, true, {
         gasPrice: TX_GAS_PRICE,
         gasLimit: TX_GAS_LIMIT,
-      }
+      })
+    ).wait();
+
+    spinner.succeed(
+      `Vote yes on Commons Upgrade vote. Tx hash: ${txReceipt.transactionHash}`
     );
   }
 };
@@ -207,20 +214,26 @@ const vote = async (evmcrispr: EVMcrispr, signer: SignerWithAddress) => {
 async function main() {
   const signer = (await ethers.getSigners())[0];
   const evmcrispr = new EVMcrispr(signer, await signer.getChainId());
-  await evmcrispr.connect(gardensDAO);
 
-  await stakeTokens(evmcrispr, signer);
+  spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
 
-  await signAgreement(signer, evmcrispr);
+  await evmcrispr.connect(gardensDAOAddress);
+
+  spinner = spinner.succeed();
+
+  const gardenContext = await buildGardenContext(evmcrispr, signer);
+
+  // Sign covenant
+  await signAgreement(gardenContext);
+
+  // Stake collateral action amount
+  await stakeTokens(gardenContext);
 
   const { codeAddress: bancorFormulaBaseAddress } =
     await evmcrispr.connector.repo("bancor-formula", "aragonpm.eth");
-  const tokenManager = (await ethers.getContractAt(
-    "TokenManager",
-    evmcrispr.app("wrappable-hooked-token-manager")(),
-    signer
-  )) as TokenManager;
-  const tokenAddress = await tokenManager.token();
+  const tokenAddress = await gardenContext.hookedTokenManager.token();
+
+  spinner = spinner.start(`Encode and forward Commons Upgrade script`);
 
   const txReceipt = await evmcrispr.forward(
     [
@@ -273,7 +286,7 @@ async function main() {
           ],
           ["commons-bancor-market-maker.open:abc", "agent:2", "TRANSFER_ROLE"],
           [
-            hatchMigrationTools,
+            hatchMigrationToolsAddress,
             "migration-tools.open:mtb",
             "PREPARE_CLAIMS_ROLE",
           ],
@@ -302,14 +315,17 @@ async function main() {
     { context: "Commons Upgrade", path: ["disputable-voting"] }
   );
 
-  console.log(txReceipt);
+  spinner = spinner.succeed(
+    `Commons Upgrade script forwarded. Tx hash: ${txReceipt.transactionHash}`
+  );
 
-  await vote(evmcrispr, signer);
+  await vote(gardenContext);
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
+    spinner.fail();
     console.error(error);
     process.exit(1);
   });
