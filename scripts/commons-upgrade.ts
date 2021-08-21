@@ -29,6 +29,7 @@ interface GardenContext {
 // COMMONS UPGRADE PARAMETERS
 
 const gardensDAOAddress = ""; // Gardens DAO to be upgraded.
+const collateralTokenAddress = ""; // ABC's collateral token (e.g. wXDAI).
 const hatchMigrationToolsAddress = ""; // Migration tools app installed on the Hatch.
 const entryTribute = 0.1; // The entry tribute to be deducted from buy order.
 const exitTribute = 0.2; // The exit tribute to be deducted from sell orders.
@@ -231,7 +232,6 @@ async function main() {
 
   const { codeAddress: bancorFormulaBaseAddress } =
     await evmcrispr.connector.repo("bancor-formula", "aragonpm.eth");
-  const tokenAddress = await gardenContext.hookedTokenManager.token();
 
   spinner = spinner.start(`Encode and forward Commons Upgrade script`);
 
@@ -311,7 +311,7 @@ async function main() {
       ]),
       evmcrispr
         .call("commons-bancor-market-maker.open:abc")
-        .addCollateralToken(tokenAddress, 1, 0, reserveRatio * PPM),
+        .addCollateralToken(collateralTokenAddress, 1, 0, reserveRatio * PPM),
     ],
     { context: "Commons Upgrade", path: ["disputable-voting"] }
   );
