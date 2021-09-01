@@ -7,6 +7,9 @@ import { ERC20 } from "../typechain";
 
 const { utils } = ethers;
 
+export const TX_GAS_LIMIT = 10000000;
+export const TX_GAS_PRICE = 10000000000;
+
 export const filterContractEvents = (
   contract: Contract,
   selectedFilter: string,
