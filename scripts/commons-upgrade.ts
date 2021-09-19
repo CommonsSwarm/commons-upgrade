@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import ora from "ora";
-import { EVMcrispr } from "@commonsswarm/evmcrispr";
+import { EVMcrispr, oracle } from "@commonsswarm/evmcrispr";
 import {
   toDecimals,
   TX_GAS_LIMIT,
@@ -28,11 +28,9 @@ const PPM = 1000000;
 
 async function main() {
   const signer = (await ethers.getSigners())[0];
-  const evmcrispr = new EVMcrispr(signer, await signer.getChainId());
+  const evmcrispr = await EVMcrispr.create(signer, gardensDAOAddress);
 
   spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
-
-  await evmcrispr.connect(gardensDAOAddress);
 
   spinner = spinner.succeed();
 
@@ -110,6 +108,12 @@ async function main() {
             "migration-tools.open:mtb",
             "wrappable-hooked-token-manager",
             "ASSIGN_ROLE",
+          ],
+          [
+            evmcrispr.ANY_ENTITY,
+            "disputable-voting",
+            "CREATE_VOTES_ROLE",
+            oracle(evmcrispr.app("migration-tools.open:mtb")()),
           ],
         ],
         "disputable-voting"
