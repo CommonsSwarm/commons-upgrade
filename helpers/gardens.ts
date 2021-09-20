@@ -16,14 +16,14 @@ import {
   IDisputableVoting,
   IStaking,
   IStakingFactory,
-  TokenManager,
+  ITokenManager,
 } from "../typechain";
 
 let spinner = ora();
 
 interface GardenContext {
   agreement: IAgreement;
-  hookedTokenManager: TokenManager;
+  hookedTokenManager: ITokenManager;
   disputableVoting: IDisputableVoting;
   signer: SignerWithAddress;
 }
@@ -35,19 +35,19 @@ export const buildGardenContext = async (
   return {
     agreement: (await ethers.getContractAt(
       "IAgreement",
-      evmcrispr.app("agreement")(),
+      evmcrispr.app("agreement.open")(),
       signer
     )) as IAgreement,
     disputableVoting: (await ethers.getContractAt(
       "IDisputableVoting",
-      evmcrispr.app("disputable-voting")(),
+      evmcrispr.app("disputable-voting.open")(),
       signer
     )) as IDisputableVoting,
     hookedTokenManager: (await ethers.getContractAt(
-      "TokenManager",
-      evmcrispr.app("wrappable-hooked-token-manager")(),
+      "ITokenManager",
+      evmcrispr.app("wrappable-hooked-token-manager.open")(),
       signer
-    )) as TokenManager,
+    )) as ITokenManager,
     signer,
   };
 };

@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import ora from "ora";
-import { EVMcrispr, oracle } from "@commonsswarm/evmcrispr";
+import { EVMcrispr } from "@commonsswarm/evmcrispr";
 import {
   toDecimals,
   TX_GAS_LIMIT,
@@ -28,7 +28,9 @@ const PPM = 1000000;
 
 async function main() {
   const signer = (await ethers.getSigners())[0];
-  const evmcrispr = await EVMcrispr.create(signer, gardensDAOAddress);
+  const evmcrispr = await EVMcrispr.create(signer, gardensDAOAddress, {
+    ipfsGateway: "https://ipfs.io/ipfs/",
+  });
 
   spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
 
@@ -43,24 +45,25 @@ async function main() {
     [
       evmcrispr.installNewApp("agent:reserve"),
       evmcrispr.installNewApp("augmented-bonding-curve.open:abc", [
-        evmcrispr.app("wrappable-hooked-token-manager"),
+        evmcrispr.app("wrappable-hooked-token-manager.open"),
         bancorFormulaBaseAddress,
         evmcrispr.app("agent:reserve"),
-        evmcrispr.app("agent"),
+        // Fees are going to the common pool
+        evmcrispr.app("agent:1"),
         // Percentage values are represented in 18-decimal base
         toDecimals(entryTribute),
         toDecimals(exitTribute),
       ]),
       evmcrispr.installNewApp("migration-tools.open:mtb", [
-        evmcrispr.app("wrappable-hooked-token-manager"),
-        evmcrispr.app("agent"),
-        evmcrispr.app("agent:reserve"),
+        evmcrispr.app("wrappable-hooked-token-manager.open"),
+        evmcrispr.app("agent:1"), // Common pool as Migration Tools' vault 1
+        evmcrispr.app("agent:reserve"), // Reserve pool as Migration Tools' vault 2
         0,
       ]),
       evmcrispr.addPermissions(
         [
           [
-            "disputable-voting",
+            "disputable-voting.open",
             "augmented-bonding-curve.open:abc",
             "OPEN_TRADING_ROLE",
           ],
@@ -75,18 +78,18 @@ async function main() {
             "MAKE_SELL_ORDER_ROLE",
           ],
           [
-            "disputable-voting",
+            "disputable-voting.open",
             "augmented-bonding-curve.open:abc",
             "ADD_COLLATERAL_TOKEN_ROLE",
           ],
           [
             "augmented-bonding-curve.open:abc",
-            "wrappable-hooked-token-manager",
+            "wrappable-hooked-token-manager.open",
             "MINT_ROLE",
           ],
           [
             "augmented-bonding-curve.open:abc",
-            "wrappable-hooked-token-manager",
+            "wrappable-hooked-token-manager.open",
             "BURN_ROLE",
           ],
           [
@@ -101,33 +104,48 @@ async function main() {
           ],
           [
             "migration-tools.open:mtb",
-            "wrappable-hooked-token-manager",
+            "wrappable-hooked-token-manager.open",
             "ISSUE_ROLE",
           ],
           [
             "migration-tools.open:mtb",
-            "wrappable-hooked-token-manager",
+            "wrappable-hooked-token-manager.open",
             "ASSIGN_ROLE",
           ],
           [
             evmcrispr.ANY_ENTITY,
-            "disputable-voting",
+            "disputable-voting.open",
             "CREATE_VOTES_ROLE",
-            oracle(evmcrispr.app("migration-tools.open:mtb")()),
+            evmcrispr.setOracle("migration-tools.open:mtb"),
           ],
         ],
-        "disputable-voting"
+        "disputable-voting.open"
       ),
-      evmcrispr.revokePermissions([
-        ["dynamic-issuance", "wrappable-hooked-token-manager", "MINT_ROLE"],
-        ["dynamic-issuance", "wrappable-hooked-token-manager", "BURN_ROLE"],
-        ["disputable-voting", "dynamic-issuance", "UPDATE_SETTINGS_ROLE"],
-      ]),
+      evmcrispr.revokePermissions(
+        [
+          [
+            "dynamic-issuance.open",
+            "wrappable-hooked-token-manager.open",
+            "MINT_ROLE",
+          ],
+          [
+            "dynamic-issuance.open",
+            "wrappable-hooked-token-manager.open",
+            "BURN_ROLE",
+          ],
+          [
+            "disputable-voting.open",
+            "dynamic-issuance.open",
+            "UPDATE_SETTINGS_ROLE",
+          ],
+        ],
+        true
+      ),
       evmcrispr
         .call("augmented-bonding-curve.open:abc")
         .addCollateralToken(collateralTokenAddress, 1, 0, reserveRatio * PPM),
     ],
-    ["disputable-voting"],
+    ["disputable-voting.open"],
     { context: "Commons Upgrade" }
   );
 
