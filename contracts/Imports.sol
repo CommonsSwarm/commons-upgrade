@@ -13,7 +13,7 @@ pragma solidity 0.4.24;
 // You know which one I went for.
 
 contract TestImports {
-    constructor() public {
-        // solium-disable-previous-line no-empty-blocks
-    }
+  constructor() public {
+    // solium-disable-previous-line no-empty-blocks
+  }
 }

@@ -21,5 +21,5 @@ export const executeActions = async (
     })
   );
 
-  return await Promise.all(txResponses.map((txResponse) => txResponse.wait()));
+  return Promise.all(txResponses.map((txResponse) => txResponse.wait()));
 };

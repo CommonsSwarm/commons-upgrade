@@ -1,4 +1,4 @@
-import { ActionFunction, Address, EVMcrispr } from "@1hive/evmcrispr";
+import { ActionFunction, EVMcrispr } from "@1hive/evmcrispr";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
 import { Signer } from "@ethersproject/abstract-signer";
 import { BigNumber } from "@ethersproject/bignumber";

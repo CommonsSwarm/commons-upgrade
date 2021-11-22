@@ -41,6 +41,16 @@ function mnemonic() {
   return "";
 }
 
+const forking = {
+  // RINKEBY
+  // url: "https://eth-rinkeby.alchemyapi.io/v2/zWeBt8YowIcK93EPCcp3862fvKTUsLDO",
+  // blockNumber: 9642000,
+
+  // XDAI
+  url: "https://xdai-archive.blockscout.com",
+  blockNumber: 19087149,
+};
+
 const config: HardhatUserConfig = {
   defaultNetwork,
 
@@ -84,8 +94,8 @@ const config: HardhatUserConfig = {
     deployer: 0,
   },
   tenderly: {
-    project: process.env.TENDERLY_PROJECT || "",
-    username: process.env.TENDERLY_USERNAME || "",
+    project: process.env.TENDERLY_PROJECT || "osmotic-funding",
+    username: process.env.TENDERLY_USERNAME || "PJColombo",
   },
   networks: {
     hardhat: {
@@ -93,24 +103,20 @@ const config: HardhatUserConfig = {
       gas: 12450000,
       gasPrice: 8000000000,
       allowUnlimitedContractSize: true,
-      forking: {
-        // RINKEBY
-        // url: "https://eth-rinkeby.alchemyapi.io/v2/zWeBt8YowIcK93EPCcp3862fvKTUsLDO",
-        // blockNumber: 9642000,
-        url: "https://xdai-archive.blockscout.com",
-        blockNumber: 19087149,
-      },
+      forking,
     },
     localhost: {
+      chainId: 100,
       url: "http://localhost:8545",
       timeout: 0,
       /*
         notice no mnemonic here? it will just use account 0 of the hardhat node to deploy
         (you can put in a mnemonic here to set the deployer locally)
       */
-      accounts: {
-        mnemonic: mnemonic(),
-      },
+      // accounts: {
+      //   mnemonic: mnemonic(),
+      // },
+      forking,
     },
     coverage: {
       url: "http://localhost:8555",

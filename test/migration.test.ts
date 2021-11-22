@@ -1,5 +1,4 @@
 import { ActionFunction, Address, EVMcrispr } from "@1hive/evmcrispr";
-import { TransactionReceipt } from "@ethersproject/abstract-provider";
 import { Signer } from "@ethersproject/abstract-signer";
 import { Contract } from "@ethersproject/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
@@ -23,7 +22,6 @@ import { getTokenHolders } from "./helpers/token";
 import {
   buildMigrationAction,
   claimTokens,
-  HOLDERS_PROCESSED_PER_TRANSACTION,
 } from "../scripts/helpers/migration";
 
 // xDai
@@ -153,10 +151,8 @@ describe("Hatch migration", () => {
     let commonsTokenManager: Contract;
 
     before("Claim tokens", async () => {
-      hatchTokenHolders = await getTokenHolders(
-        await hatch.token(),
-        HOLDERS_PROCESSED_PER_TRANSACTION
-      );
+      hatchTokenHolders = await getTokenHolders(await hatch.token());
+
       const hatchTokenHolderAddresses = hatchTokenHolders.map((holder) =>
         holder.address.toLowerCase()
       );
@@ -180,7 +176,11 @@ describe("Hatch migration", () => {
       );
       const commonsToken = new Contract(
         await commonsTokenManager.token(),
-        (await artifacts.readArtifact("MiniMeToken")).abi,
+        (
+          await artifacts.readArtifact(
+            "@aragon/minime/contracts/MiniMeToken.sol:MiniMeToken"
+          )
+        ).abi,
         signer
       );
 
