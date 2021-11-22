@@ -1,14 +1,14 @@
 import { ethers } from "hardhat";
 import ora from "ora";
-import { EVMcrispr } from "@commonsswarm/evmcrispr";
+import { EVMcrispr } from "@1hive/evmcrispr";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ContractReceipt } from "@ethersproject/contracts";
 import {
   addressesEqual,
   approveTokenAmount,
   filterContractEvents,
-  TX_GAS_LIMIT,
-  TX_GAS_PRICE,
+  MAX_TX_GAS_LIMIT,
+  MAX_TX_GAS_PRICE,
 } from "../helpers/web3-helpers";
 import {
   ERC20,
@@ -35,17 +35,17 @@ export const buildGardenContext = async (
   return {
     agreement: (await ethers.getContractAt(
       "IAgreement",
-      evmcrispr.app("agreement.open")(),
+      evmcrispr.app("agreement.open"),
       signer
     )) as IAgreement,
     disputableVoting: (await ethers.getContractAt(
       "IDisputableVoting",
-      evmcrispr.app("disputable-voting.open")(),
+      evmcrispr.app("disputable-voting.open"),
       signer
     )) as IDisputableVoting,
     hookedTokenManager: (await ethers.getContractAt(
       "ITokenManager",
-      evmcrispr.app("wrappable-hooked-token-manager.open")(),
+      evmcrispr.app("wrappable-hooked-token-manager.open"),
       signer
     )) as ITokenManager,
     signer,
@@ -193,8 +193,8 @@ export const vote = async (gardenContext: GardenContext): Promise<void> => {
 
     const txReceipt = await (
       await disputableVoting.vote(voteId, true, {
-        gasPrice: TX_GAS_PRICE,
-        gasLimit: TX_GAS_LIMIT,
+        gasPrice: MAX_TX_GAS_PRICE,
+        gasLimit: MAX_TX_GAS_LIMIT,
       })
     ).wait();
 
