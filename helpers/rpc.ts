@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { BigNumber, Signer } from "ethers";
 import hre, { ethers } from "hardhat";
 
 export const duration = {
@@ -22,7 +22,17 @@ export const duration = {
   },
 };
 
-export const impersonateAddress = async (address: string) => {
+export const setBalance = async (
+  account: string,
+  balance: string
+): Promise<void> => {
+  await hre.network.provider.send("hardhat_setBalance", [account, balance]);
+};
+
+export const impersonateAddress = async (
+  address: string,
+  setInitialBalance = true
+): Promise<Signer> => {
   await hre.network.provider.request({
     method: "hardhat_impersonateAccount",
     params: [address],
@@ -30,14 +40,13 @@ export const impersonateAddress = async (address: string) => {
 
   const signer = await ethers.provider.getSigner(address);
 
+  if (setInitialBalance) {
+    await setBalance(
+      address,
+      ethers.utils.hexStripZeros(ethers.constants.WeiPerEther.toHexString())
+    );
+  }
   return signer;
-};
-
-export const takeSnapshot = async (): Promise<string> => {
-  return (await hre.network.provider.request({
-    method: "evm_snapshot",
-    params: [],
-  })) as Promise<string>;
 };
 
 export const restoreSnapshot = async (id: string): Promise<void> => {
@@ -47,12 +56,20 @@ export const restoreSnapshot = async (id: string): Promise<void> => {
   });
 };
 
+export const takeSnapshot = async (): Promise<string> => {
+  return (await hre.network.provider.request({
+    method: "evm_snapshot",
+    params: [],
+  })) as Promise<string>;
+};
+
 export const increase = async (duration: string | BigNumber) => {
   if (!ethers.BigNumber.isBigNumber(duration)) {
     duration = ethers.BigNumber.from(duration);
   }
 
-  if (duration.isNegative()) throw Error(`Cannot increase time by a negative amount (${duration})`);
+  if (duration.isNegative())
+    throw Error(`Cannot increase time by a negative amount (${duration})`);
 
   await hre.network.provider.request({
     method: "evm_increaseTime",
@@ -61,5 +78,21 @@ export const increase = async (duration: string | BigNumber) => {
 
   await hre.network.provider.request({
     method: "evm_mine",
+  });
+};
+
+export const resetForkedChain = async () => {
+  const { url, blockNumber, enabled } = hre.config.networks.hardhat.forking;
+  await hre.network.provider.request({
+    method: "hardhat_reset",
+    params: [
+      {
+        forking: {
+          blockNumber,
+          enabled,
+          jsonRpcUrl: url,
+        },
+      },
+    ],
   });
 };

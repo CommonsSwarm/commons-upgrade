@@ -24,7 +24,7 @@ export const approveTokenAmount = async (
 export const getTokenHolders = async (
   token: Address,
   length = 1000
-): Promise<{ address: string; value: BigNumber }[]> => {
+): Promise<{ address: string; value: string }[]> => {
   return fetch(
     `https://blockscout.com/xdai/mainnet/api?module=token&action=getTokenHolders&contractaddress=${token}&offset=${length}`
   )

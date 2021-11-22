@@ -19,7 +19,7 @@ import { buildCommonsUpgradeActions } from "../scripts/helpers/commons-upgrade";
 const GARDEN_ADDRESS = "0x4ae7b62f1579b4149750a609ef9b830bc72272f8";
 const HATCH_DAO_ADDRESS = "0x4625c2c3E1Bc9323CC1A9dc312F3188e8dE83f42";
 
-describe.only("Commons Upgrade", () => {
+describe("Commons Upgrade", () => {
   let commonsEVMcrispr: EVMcrispr;
   let acl: Contract;
   let signer: SignerWithAddress;
