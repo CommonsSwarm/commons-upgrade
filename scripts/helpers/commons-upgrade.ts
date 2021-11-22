@@ -20,8 +20,8 @@ export const buildCommonsUpgradeActions = async (
     await commonsEVMcrispr.connector.repo("bancor-formula", "aragonpm.eth");
 
   const actionFns = [
-    commonsEVMcrispr.installNewApp("agent:reserve"),
-    commonsEVMcrispr.installNewApp("augmented-bonding-curve.open:abc", [
+    commonsEVMcrispr.install("agent:reserve"),
+    commonsEVMcrispr.install("augmented-bonding-curve.open:abc", [
       "wrappable-hooked-token-manager.open",
       bancorFormulaBaseAddress,
       "agent:reserve",
@@ -30,13 +30,13 @@ export const buildCommonsUpgradeActions = async (
       entryTribute,
       exitTribute,
     ]),
-    commonsEVMcrispr.installNewApp("migration-tools.open:mtb", [
+    commonsEVMcrispr.install("migration-tools.open:mtb", [
       "wrappable-hooked-token-manager.open",
       "agent:1", // Common pool as Migration Tools' vault 1
       "agent:reserve", // Reserve pool as Migration Tools' vault 2
       0,
     ]),
-    commonsEVMcrispr.addPermissions(
+    commonsEVMcrispr.grantPermissions(
       [
         [
           "disputable-voting.open",
@@ -83,7 +83,7 @@ export const buildCommonsUpgradeActions = async (
           commonsEVMcrispr.ANY_ENTITY,
           "disputable-voting.open",
           "CREATE_VOTES_ROLE",
-          // evmcrispr.setOracle("migration-tools.open:mtb"),
+          // commonsEVMcrispr.setOracle("migration-tools.open:mtb"),
         ],
       ],
       "disputable-voting.open"
@@ -100,7 +100,7 @@ export const buildCommonsUpgradeActions = async (
         "BURN_ROLE",
       ],
     ]),
-    commonsEVMcrispr.revokePermission(
+    commonsEVMcrispr.revoke(
       [
         "disputable-voting.open",
         "dynamic-issuance.open",
@@ -108,9 +108,9 @@ export const buildCommonsUpgradeActions = async (
       ],
       true
     ),
-    // evmcrispr
-    //   .call("augmented-bonding-curve.open:abc")
-    //   .addCollateralToken(collateralTokenAddress, 1, 0, reserveRatio),
+    commonsEVMcrispr
+      .exec("augmented-bonding-curve.open:abc")
+      .addCollateralToken(collateralTokenAddress, 1, 0, reserveRatio),
   ];
 
   return actionFns;

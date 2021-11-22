@@ -18,14 +18,13 @@ export const buildMigrationAction = async (
 ): Promise<ActionFunction[]> => {
   const hatch = await getAppContract(
     "marketplace-hatch.open:0",
-    hatchEVMcrispr,
-    signer
+    hatchEVMcrispr
   );
   const vaultTokenAddress = await hatch.contributionToken();
 
   return [
     hatchEVMcrispr
-      .call("migration-tools-beta.open")
+      .exec("migration-tools-beta.open")
       .migrate(
         commonsEVMcrispr.app("migration-tools.open:mtb"),
         commonsEVMcrispr.app("agent:1"),

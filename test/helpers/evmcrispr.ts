@@ -30,7 +30,11 @@ export const getAppContract = (
     );
   }
 
-  return new Contract(app.address, app.abiInterface, signer);
+  return new Contract(
+    app.address,
+    app.abiInterface,
+    signer ?? evmcrispr.signer
+  );
 };
 
 /**

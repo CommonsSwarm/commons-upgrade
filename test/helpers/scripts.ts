@@ -10,7 +10,7 @@ export const executeActions = async (
   actionFns: ActionFunction[],
   executorSigner: Signer
 ): Promise<TransactionReceipt[]> => {
-  const actions = await normalizeActions(actionFns);
+  const actions = await normalizeActions(actionFns)();
 
   const txResponses: TransactionResponse[] = await Promise.all(
     actions.map((action) => {

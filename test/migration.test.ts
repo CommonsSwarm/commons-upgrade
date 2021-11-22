@@ -71,11 +71,7 @@ describe("Hatch migration", () => {
   });
 
   before("Perform Commons Upgrade", async () => {
-    hatch = await getAppContract(
-      "marketplace-hatch.open:0",
-      hatchEVMcrispr,
-      signer
-    );
+    hatch = await getAppContract("marketplace-hatch.open:0", hatchEVMcrispr);
     vaultTokenAddress = await hatch.contributionToken();
 
     const actionFns = await buildCommonsUpgradeActions(
@@ -92,19 +88,17 @@ describe("Hatch migration", () => {
   before("Prepare migration", async () => {
     const hatchMigrationTools = getAppContract(
       "migration-tools-beta.open:0",
-      hatchEVMcrispr,
-      signer
+      hatchEVMcrispr
     );
     newMigrationTools = getAppContract(
       "migration-tools.open:mtb",
-      commonsEVMcrispr,
-      signer
+      commonsEVMcrispr
     );
 
     PCT_BASE = (await hatchMigrationTools.PCT_BASE()) as BigNumber;
 
-    newVault1 = getAppContract("agent:1", commonsEVMcrispr, signer);
-    newVault2 = getAppContract("agent:reserve", commonsEVMcrispr, signer);
+    newVault1 = getAppContract("agent:1", commonsEVMcrispr);
+    newVault2 = getAppContract("agent:reserve", commonsEVMcrispr);
 
     vaultTokenAddress = await hatch.contributionToken();
 
@@ -120,8 +114,8 @@ describe("Hatch migration", () => {
   });
 
   it("should migrate the Hatch DAO funds correctly", async () => {
-    const oldVault1 = getAppContract("agent:0", hatchEVMcrispr, signer);
-    const oldVault2 = getAppContract("agent:1", hatchEVMcrispr, signer);
+    const oldVault1 = getAppContract("agent:0", hatchEVMcrispr);
+    const oldVault2 = getAppContract("agent:1", hatchEVMcrispr);
     const hatchVault1Funds = (await oldVault1.balance(
       vaultTokenAddress
     )) as BigNumber;
@@ -151,7 +145,7 @@ describe("Hatch migration", () => {
     let commonsTokenManager: Contract;
 
     before("Claim tokens", async () => {
-      hatchTokenHolders = await getTokenHolders(await hatch.token());
+      hatchTokenHolders = await getTokenHolders(await hatch.token(), 10);
 
       const hatchTokenHolderAddresses = hatchTokenHolders.map((holder) =>
         holder.address.toLowerCase()
@@ -171,8 +165,7 @@ describe("Hatch migration", () => {
     it("should claim tokens correctly", async () => {
       commonsTokenManager = getAppContract(
         "wrappable-hooked-token-manager.open:0",
-        commonsEVMcrispr,
-        signer
+        commonsEVMcrispr
       );
       const commonsToken = new Contract(
         await commonsTokenManager.token(),
