@@ -7,7 +7,6 @@ import { impersonateAddress } from "../helpers/rpc";
 import {
   addressesEqual,
   executeActions,
-  getAppContract,
   pct16,
   ppm,
   prepareEVMcrisprSigner,
@@ -21,12 +20,10 @@ const HATCH_DAO_ADDRESS = "0x4625c2c3E1Bc9323CC1A9dc312F3188e8dE83f42";
 
 describe("Commons Upgrade", () => {
   let commonsEVMcrispr: EVMcrispr;
+  let hatchEVMcrispr: EVMcrispr;
   let acl: Contract;
   let signer: SignerWithAddress;
   let executorSigner: Signer;
-
-  let hatchMigrationToolsAddress: string;
-  let collateralTokenAddress: string;
 
   const isAppInstalled = async (
     app: App,
@@ -76,18 +73,9 @@ describe("Commons Upgrade", () => {
     signer = (await ethers.getSigners())[0];
     signer = prepareEVMcrisprSigner(signer);
 
-    const hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
-    hatchMigrationToolsAddress = hatchEVMcrispr.app(
-      "migration-tools-beta.open"
-    );
-    const hatchApp = getAppContract(
-      "marketplace-hatch.open:0",
-      hatchEVMcrispr,
-      signer
-    );
-    collateralTokenAddress = await hatchApp.contributionToken();
-
+    hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
     commonsEVMcrispr = await EVMcrispr.create(GARDEN_ADDRESS, signer);
+
     executorSigner = await impersonateAddress(
       commonsEVMcrispr.app("disputable-voting.open")
     );
@@ -97,15 +85,15 @@ describe("Commons Upgrade", () => {
   });
 
   before("Execute commons upgrade script", async () => {
-    const actionFns = await buildCommonsUpgradeActions(
+    const commonsUpgradeActionFns = await buildCommonsUpgradeActions(
       commonsEVMcrispr,
-      hatchMigrationToolsAddress,
-      collateralTokenAddress,
+      hatchEVMcrispr,
       pct16(10).toString(),
       pct16(20).toString(),
-      ppm(0.01)
+      ppm(0.01),
+      signer
     );
-    await executeActions(actionFns, executorSigner);
+    await executeActions(commonsUpgradeActionFns, executorSigner);
   });
 
   describe("when installing apps", () => {
@@ -208,7 +196,7 @@ describe("Commons Upgrade", () => {
     describe("when setting up the Migration Tools' permissions", () => {
       it("should grant to the Hatch's Migration Tools the PREPARE_CLAIMS_ROLE", async () => {
         await hasPermission(
-          hatchMigrationToolsAddress,
+          hatchEVMcrispr.app("migration-tools-beta.open"),
           "migration-tools.open:mtb",
           "PREPARE_CLAIMS_ROLE"
         );

@@ -1,19 +1,27 @@
 import { ActionFunction, EVMcrispr } from "@1hive/evmcrispr";
+import { Signer } from "@ethersproject/abstract-signer";
+import { getAppContract } from "../../test/helpers";
 
 export const buildCommonsUpgradeActions = async (
-  evmcrispr: EVMcrispr,
-  hatchMigrationToolsAddress: string,
-  collateralTokenAddress: string,
+  commonsEVMcrispr: EVMcrispr,
+  hatchEVMcrispr: EVMcrispr,
   entryTribute: string,
   exitTribute: string,
-  reserveRatio: number
+  reserveRatio: number,
+  signer: Signer
 ): Promise<ActionFunction[]> => {
+  const hatchApp = getAppContract(
+    "marketplace-hatch.open:0",
+    hatchEVMcrispr,
+    signer
+  );
+  const collateralTokenAddress = await hatchApp.contributionToken();
   const { codeAddress: bancorFormulaBaseAddress } =
-    await evmcrispr.connector.repo("bancor-formula", "aragonpm.eth");
+    await commonsEVMcrispr.connector.repo("bancor-formula", "aragonpm.eth");
 
   const actionFns = [
-    evmcrispr.installNewApp("agent:reserve"),
-    evmcrispr.installNewApp("augmented-bonding-curve.open:abc", [
+    commonsEVMcrispr.installNewApp("agent:reserve"),
+    commonsEVMcrispr.installNewApp("augmented-bonding-curve.open:abc", [
       "wrappable-hooked-token-manager.open",
       bancorFormulaBaseAddress,
       "agent:reserve",
@@ -22,13 +30,13 @@ export const buildCommonsUpgradeActions = async (
       entryTribute,
       exitTribute,
     ]),
-    evmcrispr.installNewApp("migration-tools.open:mtb", [
+    commonsEVMcrispr.installNewApp("migration-tools.open:mtb", [
       "wrappable-hooked-token-manager.open",
       "agent:1", // Common pool as Migration Tools' vault 1
       "agent:reserve", // Reserve pool as Migration Tools' vault 2
       0,
     ]),
-    evmcrispr.addPermissions(
+    commonsEVMcrispr.addPermissions(
       [
         [
           "disputable-voting.open",
@@ -36,12 +44,12 @@ export const buildCommonsUpgradeActions = async (
           "MANAGE_COLLATERAL_TOKEN_ROLE",
         ],
         [
-          evmcrispr.ANY_ENTITY,
+          commonsEVMcrispr.ANY_ENTITY,
           "augmented-bonding-curve.open:abc",
           "MAKE_BUY_ORDER_ROLE",
         ],
         [
-          evmcrispr.ANY_ENTITY,
+          commonsEVMcrispr.ANY_ENTITY,
           "augmented-bonding-curve.open:abc",
           "MAKE_SELL_ORDER_ROLE",
         ],
@@ -57,7 +65,7 @@ export const buildCommonsUpgradeActions = async (
         ],
         ["augmented-bonding-curve.open:abc", "agent:reserve", "TRANSFER_ROLE"],
         [
-          hatchMigrationToolsAddress,
+          hatchEVMcrispr.app("migration-tools-beta.open"),
           "migration-tools.open:mtb",
           "PREPARE_CLAIMS_ROLE",
         ],
@@ -72,7 +80,7 @@ export const buildCommonsUpgradeActions = async (
           "ASSIGN_ROLE",
         ],
         [
-          evmcrispr.ANY_ENTITY,
+          commonsEVMcrispr.ANY_ENTITY,
           "disputable-voting.open",
           "CREATE_VOTES_ROLE",
           // evmcrispr.setOracle("migration-tools.open:mtb"),
@@ -80,7 +88,7 @@ export const buildCommonsUpgradeActions = async (
       ],
       "disputable-voting.open"
     ),
-    evmcrispr.revokePermissions([
+    commonsEVMcrispr.revokePermissions([
       [
         "dynamic-issuance.open",
         "wrappable-hooked-token-manager.open",
@@ -92,7 +100,7 @@ export const buildCommonsUpgradeActions = async (
         "BURN_ROLE",
       ],
     ]),
-    evmcrispr.revokePermission(
+    commonsEVMcrispr.revokePermission(
       [
         "disputable-voting.open",
         "dynamic-issuance.open",
@@ -102,7 +110,7 @@ export const buildCommonsUpgradeActions = async (
     ),
     // evmcrispr
     //   .call("augmented-bonding-curve.open:abc")
-    //   .addCollateralToken(collateralTokenAddress, 1, 0, ppm(reserveRatio)),
+    //   .addCollateralToken(collateralTokenAddress, 1, 0, reserveRatio),
   ];
 
   return actionFns;

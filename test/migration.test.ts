@@ -21,9 +21,10 @@ import { buildCommonsUpgradeActions } from "../scripts/helpers/commons-upgrade";
 import { BigNumber } from "@ethersproject/bignumber";
 import { getTokenHolders } from "./helpers/token";
 import {
+  buildMigrationAction,
   claimTokens,
   HOLDERS_PROCESSED_PER_TRANSACTION,
-} from "../scripts/helpers/claim-tokens";
+} from "../scripts/helpers/migration";
 
 // xDai
 const GARDEN_DAO_ADDRESS = "0x4ae7b62f1579b4149750a609ef9b830bc72272f8";
@@ -39,7 +40,7 @@ describe("Hatch migration", () => {
 
   let hatch: Contract;
   let newMigrationTools: Contract;
-  let migrationAction: ActionFunction[];
+  let migrationActionFns: ActionFunction[];
 
   // Migration params
   let newVault1: Contract;
@@ -81,11 +82,11 @@ describe("Hatch migration", () => {
 
     const actionFns = await buildCommonsUpgradeActions(
       commonsEVMcrispr,
-      hatchEVMcrispr.app("migration-tools-beta.open"),
-      vaultTokenAddress,
+      hatchEVMcrispr,
       pct16(10).toString(),
       pct16(20).toString(),
-      ppm(0.01)
+      ppm(0.01),
+      signer
     );
     await executeActions(actionFns, commonsExecutorSigner);
   });
@@ -109,20 +110,15 @@ describe("Hatch migration", () => {
 
     vaultTokenAddress = await hatch.contributionToken();
 
-    migrationAction = [
-      hatchEVMcrispr
-        .call("migration-tools-beta.open")
-        .migrate(
-          newMigrationTools.address,
-          newVault1.address,
-          newVault2.address,
-          vaultTokenAddress,
-          pct,
-          vestingStartDate,
-          vestingCliffPeriod,
-          vestingCompletePeriod
-        ),
-    ];
+    migrationActionFns = await buildMigrationAction(
+      hatchEVMcrispr,
+      commonsEVMcrispr,
+      pct,
+      vestingStartDate,
+      vestingCliffPeriod,
+      vestingCompletePeriod,
+      signer
+    );
   });
 
   it("should migrate the Hatch DAO funds correctly", async () => {
@@ -136,7 +132,7 @@ describe("Hatch migration", () => {
     )) as BigNumber;
     const hatchTotalFunds = hatchVault1Funds.add(hatchVault2Funds);
 
-    await executeActions(migrationAction, hatchExecutorSigner);
+    await executeActions(migrationActionFns, hatchExecutorSigner);
 
     const newVault1Funds = (await newVault1.balance(
       vaultTokenAddress
@@ -157,8 +153,8 @@ describe("Hatch migration", () => {
     let commonsTokenManager: Contract;
 
     before("Claim tokens", async () => {
-      hatchTokenHolders = (await getTokenHolders(await hatch.token())).slice(
-        0,
+      hatchTokenHolders = await getTokenHolders(
+        await hatch.token(),
         HOLDERS_PROCESSED_PER_TRANSACTION
       );
       const hatchTokenHolderAddresses = hatchTokenHolders.map((holder) =>

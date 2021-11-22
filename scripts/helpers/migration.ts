@@ -1,7 +1,43 @@
+import { ActionFunction, Address, EVMcrispr } from "@1hive/evmcrispr";
 import { TransactionResponse } from "@ethersproject/abstract-provider";
+import { Signer } from "@ethersproject/abstract-signer";
+import { BigNumber } from "@ethersproject/bignumber";
 import { Overrides } from "@ethersproject/contracts";
+import { getAppContract } from "../../test/helpers";
 
 export const HOLDERS_PROCESSED_PER_TRANSACTION = 10;
+
+export const buildMigrationAction = async (
+  hatchEVMcrispr: EVMcrispr,
+  commonsEVMcrispr: EVMcrispr,
+  newVault1Pct: BigNumber,
+  vestingStartDate: number,
+  vestingCliffPeriod: number,
+  vestingCompletePeriod: number,
+  signer: Signer
+): Promise<ActionFunction[]> => {
+  const hatch = await getAppContract(
+    "marketplace-hatch.open:0",
+    hatchEVMcrispr,
+    signer
+  );
+  const vaultTokenAddress = await hatch.contributionToken();
+
+  return [
+    hatchEVMcrispr
+      .call("migration-tools-beta.open")
+      .migrate(
+        commonsEVMcrispr.app("migration-tools.open:mtb"),
+        commonsEVMcrispr.app("agent:1"),
+        commonsEVMcrispr.app("agent:reserve"),
+        vaultTokenAddress,
+        newVault1Pct,
+        vestingStartDate,
+        vestingCliffPeriod,
+        vestingCompletePeriod
+      ),
+  ];
+};
 
 export const claimTokens = async (
   claimFunction: Function,
