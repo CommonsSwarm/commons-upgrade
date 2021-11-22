@@ -1,7 +1,7 @@
+import { EVMcrispr } from "@1hive/evmcrispr";
 import { ethers } from "hardhat";
 import ora from "ora";
-import { EVMcrispr, TX_GAS_LIMIT, TX_GAS_PRICE } from "@commonsswarm/evmcrispr";
-import { filterContractEvents } from "../helpers/web3-helpers";
+import { getEvents, MAX_TX_GAS_LIMIT, MAX_TX_GAS_PRICE } from "../test/helpers";
 import { IDisputableVoting } from "../typechain";
 
 let spinner = ora();
@@ -10,11 +10,10 @@ const gardensDAOAddress = ""; // Gardens DAO containing disputable voting with t
 
 const main = async () => {
   const signer = (await ethers.getSigners())[0];
-  const evmcrispr = new EVMcrispr(signer, await signer.getChainId());
 
   spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
 
-  await evmcrispr.connect(gardensDAOAddress);
+  const evmcrispr = await EVMcrispr.create(gardensDAOAddress, signer);
 
   spinner.succeed();
 
@@ -22,11 +21,11 @@ const main = async () => {
 
   const disputableVoting = (await ethers.getContractAt(
     "IDisputableVoting",
-    evmcrispr.app("disputable-voting")(),
+    evmcrispr.app("disputable-voting"),
     signer
   )) as IDisputableVoting;
 
-  const votes = await filterContractEvents(disputableVoting, "StartVote");
+  const votes = await getEvents(disputableVoting, "StartVote");
 
   if (!votes || !votes.length) {
     throw new Error("Disputable voting has no votes");
@@ -45,8 +44,8 @@ const main = async () => {
 
   const txReceipt = (
     await disputableVoting.executeVote(voteId, executionScript, {
-      gasPrice: TX_GAS_PRICE,
-      gasLimit: TX_GAS_LIMIT,
+      gasPrice: MAX_TX_GAS_PRICE,
+      gasLimit: MAX_TX_GAS_LIMIT,
     })
   ).wait();
 

@@ -4,13 +4,6 @@ import { EVMcrispr } from "@1hive/evmcrispr";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ContractReceipt } from "@ethersproject/contracts";
 import {
-  addressesEqual,
-  approveTokenAmount,
-  filterContractEvents,
-  MAX_TX_GAS_LIMIT,
-  MAX_TX_GAS_PRICE,
-} from "../helpers/web3-helpers";
-import {
   ERC20,
   IAgreement,
   IDisputableVoting,
@@ -18,6 +11,14 @@ import {
   IStakingFactory,
   ITokenManager,
 } from "../typechain";
+import {
+  addressesEqual,
+  approveTokenAmount,
+  getEvent,
+  getEvents,
+  MAX_TX_GAS_LIMIT,
+  MAX_TX_GAS_PRICE,
+} from "../test/helpers";
 
 let spinner = ora();
 
@@ -80,10 +81,7 @@ export const getCollateralRequeriment = async (
 ): Promise<any> => {
   const { agreement, disputableVoting } = gardenContext;
 
-  const events = await filterContractEvents(
-    agreement,
-    "CollateralRequirementChanged"
-  );
+  const events = await getEvents(agreement, "CollateralRequirementChanged");
 
   const lastEvent = events
     .filter(({ args }) =>
@@ -179,7 +177,7 @@ export const stakeTokens = async (
 export const vote = async (gardenContext: GardenContext): Promise<void> => {
   const { disputableVoting, signer } = gardenContext;
   const signerAddress = await signer.getAddress();
-  const votes = await filterContractEvents(disputableVoting, "StartVote");
+  const votes = await getEvents(disputableVoting, "StartVote");
   const {
     args: { voteId },
   } = votes.pop();
