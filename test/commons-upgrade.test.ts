@@ -1,16 +1,16 @@
-import { EVMcrispr, App, Entity } from "@1hive/evmcrispr";
+import { EVMcrispr, App, Entity, LabeledAppIdentifier } from "@1hive/evmcrispr";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { expect } from "chai";
-import { Contract, Signer, utils as ethersUtils } from "ethers";
+import { Contract, Signer } from "ethers";
 import { ethers } from "hardhat";
 import { impersonateAddress } from "../helpers/rpc";
 import {
-  addressesEqual,
   executeActions,
+  hasPermission as checkPermission,
+  isAppInstalled as checkInstalledApp,
+  isPermissionManager as checkPermissionManager,
   pct16,
   ppm,
   prepareEVMcrisprSigner,
-  resolveEntity,
 } from "./helpers";
 import { buildCommonsUpgradeActions } from "../scripts/helpers/commons-upgrade";
 
@@ -26,15 +26,10 @@ describe("Commons Upgrade", () => {
   let executorSigner: Signer;
 
   const isAppInstalled = async (
-    app: App,
+    app: LabeledAppIdentifier,
     expectedRepo: string
   ): Promise<void> => {
-    const appContract = new Contract(app.address, app.abiInterface, signer);
-    const appKernelAddress = await appContract.kernel();
-    const appId = await appContract.appId();
-
-    expect(addressesEqual(appKernelAddress, GARDEN_ADDRESS)).to.be.true;
-    expect(appId).to.be.eq(ethersUtils.namehash(expectedRepo));
+    checkInstalledApp(commonsEVMcrispr, app, GARDEN_ADDRESS, expectedRepo);
   };
 
   const isPermissionManager = async (
@@ -42,31 +37,24 @@ describe("Commons Upgrade", () => {
     app: Entity,
     role: string
   ) => {
-    const permissionManager = await acl[
-      "getPermissionManager(address,bytes32)"
-    ](resolveEntity(app, commonsEVMcrispr), ethersUtils.id(role));
-
-    expect(
-      addressesEqual(
-        resolveEntity(manager, commonsEVMcrispr),
-        permissionManager
-      )
-    ).to.be.true;
+    return checkPermissionManager(commonsEVMcrispr, manager, app, role);
   };
 
   const hasPermission = async (
     who: Entity,
     where: Entity,
     what: string,
+    how?: string[],
     checkForTrue = true
   ): Promise<void> => {
-    expect(
-      await acl["hasPermission(address,address,bytes32)"](
-        resolveEntity(who, commonsEVMcrispr),
-        resolveEntity(where, commonsEVMcrispr),
-        ethersUtils.id(what)
-      )
-    ).to.be[checkForTrue ? "true" : "false"];
+    return checkPermission(
+      commonsEVMcrispr,
+      who,
+      where,
+      what,
+      how,
+      checkForTrue
+    );
   };
 
   before("Set up evmcrisprs", async () => {
@@ -90,30 +78,26 @@ describe("Commons Upgrade", () => {
       hatchEVMcrispr,
       pct16(10).toString(),
       pct16(20).toString(),
-      ppm(0.01),
-      signer
+      ppm(0.01)
     );
     await executeActions(commonsUpgradeActionFns, executorSigner);
   });
 
   describe("when installing apps", () => {
     it("should install the reserve Agent app", async () => {
-      await isAppInstalled(
-        commonsEVMcrispr.appCache.get("agent:reserve"),
-        "agent.aragonpm.eth"
-      );
+      await isAppInstalled("agent:reserve", "agent.aragonpm.eth");
     });
 
     it("should install the Augmented Bonding Curve", async () => {
       await isAppInstalled(
-        commonsEVMcrispr.appCache.get("augmented-bonding-curve.open:abc"),
+        "augmented-bonding-curve.open:abc",
         "augmented-bonding-curve.open.aragonpm.eth"
       );
     });
 
     it("should install the Migration Tools app", async () => {
       await isAppInstalled(
-        commonsEVMcrispr.appCache.get("migration-tools.open:mtb"),
+        "migration-tools.open:mtb",
         "migration-tools.open.aragonpm.eth"
       );
     });
@@ -228,11 +212,13 @@ describe("Commons Upgrade", () => {
     });
 
     describe("when setting up the Disputable Voting's permissions", () => {
-      it("should grant to any entity the CREATE_VOTES_ROLE", async () => {
+      it("no one should be able to create votes until tokens are migrated", async () => {
         await hasPermission(
           "ANY_ENTITY",
           "disputable-voting.open",
-          "CREATE_VOTES_ROLE"
+          "CREATE_VOTES_ROLE",
+          commonsEVMcrispr.setOracle("migration-tools.open:mtb")(),
+          false
         );
       });
     });
@@ -244,6 +230,7 @@ describe("Commons Upgrade", () => {
         "dynamic-issuance.open",
         "wrappable-hooked-token-manager.open",
         "MINT_ROLE",
+        undefined,
         false
       );
     });
@@ -252,6 +239,7 @@ describe("Commons Upgrade", () => {
         "dynamic-issuance.open",
         "wrappable-hooked-token-manager.open",
         "BURN_ROLE",
+        undefined,
         false
       );
     });
@@ -260,6 +248,7 @@ describe("Commons Upgrade", () => {
         "disputable-voting.open",
         "dynamic-issuance.open",
         "UPDATE_SETTINGS_ROLE",
+        undefined,
         false
       );
     });
@@ -270,9 +259,5 @@ describe("Commons Upgrade", () => {
         "UPDATE_SETTINGS_ROLE"
       );
     });
-  });
-
-  describe("when calling app contract's functions", () => {
-    it("should add the hatch contribution token as ABC's new collateral token", async () => {});
   });
 });

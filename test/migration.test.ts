@@ -11,6 +11,7 @@ import {
   getAppContract,
   getEvents,
   getTimestamp,
+  hasPermission,
   MAX_TX_GAS_LIMIT,
   pct16,
   ppm,
@@ -79,8 +80,7 @@ describe("Hatch migration", () => {
       hatchEVMcrispr,
       pct16(10).toString(),
       pct16(20).toString(),
-      ppm(0.01),
-      signer
+      ppm(0.01)
     );
     await executeActions(actionFns, commonsExecutorSigner);
   });
@@ -215,6 +215,15 @@ describe("Hatch migration", () => {
         transferableBalanceCompletePeriod,
         "Claimed tokens not completely unvested"
       ).to.be.equal(holderValue);
+    });
+
+    it("should be possible for any account to create votes in the Commons' Disputable Voting", async () => {
+      await hasPermission(
+        commonsEVMcrispr,
+        "ANY_ENTITY",
+        "disputable-voting.open",
+        "CREATE_VOTES_ROLE"
+      );
     });
   });
 });

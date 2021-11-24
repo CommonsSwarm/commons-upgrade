@@ -1,5 +1,4 @@
 import { ActionFunction, EVMcrispr } from "@1hive/evmcrispr";
-import { Signer } from "@ethersproject/abstract-signer";
 import { getAppContract } from "../../test/helpers";
 
 export const buildCommonsUpgradeActions = async (
@@ -7,14 +6,9 @@ export const buildCommonsUpgradeActions = async (
   hatchEVMcrispr: EVMcrispr,
   entryTribute: string,
   exitTribute: string,
-  reserveRatio: number,
-  signer: Signer
+  reserveRatio: number
 ): Promise<ActionFunction[]> => {
-  const hatchApp = getAppContract(
-    "marketplace-hatch.open:0",
-    hatchEVMcrispr,
-    signer
-  );
+  const hatchApp = getAppContract("marketplace-hatch.open:0", hatchEVMcrispr);
   const collateralTokenAddress = await hatchApp.contributionToken();
   const { codeAddress: bancorFormulaBaseAddress } =
     await commonsEVMcrispr.connector.repo("bancor-formula", "aragonpm.eth");
@@ -44,12 +38,12 @@ export const buildCommonsUpgradeActions = async (
           "MANAGE_COLLATERAL_TOKEN_ROLE",
         ],
         [
-          commonsEVMcrispr.ANY_ENTITY,
+          "ANY_ENTITY",
           "augmented-bonding-curve.open:abc",
           "MAKE_BUY_ORDER_ROLE",
         ],
         [
-          commonsEVMcrispr.ANY_ENTITY,
+          "ANY_ENTITY",
           "augmented-bonding-curve.open:abc",
           "MAKE_SELL_ORDER_ROLE",
         ],
@@ -80,10 +74,10 @@ export const buildCommonsUpgradeActions = async (
           "ASSIGN_ROLE",
         ],
         [
-          commonsEVMcrispr.ANY_ENTITY,
+          "ANY_ENTITY",
           "disputable-voting.open",
           "CREATE_VOTES_ROLE",
-          // commonsEVMcrispr.setOracle("migration-tools.open:mtb"),
+          commonsEVMcrispr.setOracle("migration-tools.open:mtb"),
         ],
       ],
       "disputable-voting.open"
