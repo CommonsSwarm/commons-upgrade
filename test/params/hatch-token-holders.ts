@@ -1,0 +1,1086 @@
+export const HATCH_TOKEN_HOLDERS = [
+  {
+    address: "0x45602bfba960277bf917c1b2007d1f03d7bd29e4",
+    value: "180665981018494576054300",
+  },
+  {
+    address: "0x38dfd788db4cfab7b9da57b06cfc06c6e0f33c3b",
+    value: "150000000000000000000000",
+  },
+  {
+    address: "0x5b7575494b1e28974efe6ea71ec569b34958f72e",
+    value: "106053271906183110187564",
+  },
+  {
+    address: "0xdf290293c4a4d6ebe38fd7085d7721041f927e0a",
+    value: "68697203504705787986904",
+  },
+  {
+    address: "0x839395e20bbb182fa440d08f850e6c7a8f6f0780",
+    value: "62863625055136641507694",
+  },
+  {
+    address: "0x5b0f8d8f47e3fdf7ee1c337abca19dbba98524e6",
+    value: "60572021866075814165263",
+  },
+  {
+    address: "0xaa01dec5307cf17f20881a3286dcaa062578cea7",
+    value: "54531188316413712108954",
+  },
+  {
+    address: "0x7221b104fba7701084759fd25faca19ac6300855",
+    value: "51337000000000000000000",
+  },
+  {
+    address: "0x5acbeb30fde4049a8fc928f562d9ce5fdad59d32",
+    value: "51304196222546639052269",
+  },
+  {
+    address: "0xf5dcd98a1c99c2c65c62025cb23cfb6f12f35497",
+    value: "50010000000000000000000",
+  },
+  {
+    address: "0x2b888954421b424c5d3d9ce9bb67c9bd47537d12",
+    value: "40081000000000000000000",
+  },
+  {
+    address: "0x955327d8f7589725fdc23af8cd27bff7f6f3ed0b",
+    value: "38670000000000000000000",
+  },
+  {
+    address: "0x60a9372862bd752cd02d9ae482f94cd2fe92a0bf",
+    value: "26147481349580764892876",
+  },
+  {
+    address: "0x778549eb292ac98a96a05e122967f22efa003707",
+    value: "25890340078268292221530",
+  },
+  {
+    address: "0xcf79c7eaec5bdc1a9e32d099c5d6bdf67e4cf6e8",
+    value: "25850566930331124908980",
+  },
+  {
+    address: "0xc131afe6dbd5a71f16d8b292f0b4ae1aa200da3f",
+    value: "25752052410310430359592",
+  },
+  {
+    address: "0x40dc654af5ce40c122ffdc679fa8e8ca8b91556a",
+    value: "24500000000000000000000",
+  },
+  {
+    address: "0x536c7e8f18d09d04697e0d2624b44bba575388c2",
+    value: "24480481621826414724862",
+  },
+  {
+    address: "0x8289432acd5eb0214b1c2526a5edb480aa06a9ab",
+    value: "24341639541569377609815",
+  },
+  {
+    address: "0xe5ac570506ff6289146cc43626d6af540aa67241",
+    value: "23368864293788149810775",
+  },
+  {
+    address: "0xcf52f1402e73418bc5e6accbd246ee8dfb055605",
+    value: "23024831808530943520934",
+  },
+  {
+    address: "0x852b8763ecb27beddc190d1792029bc17fd5439a",
+    value: "20158143304189947781155",
+  },
+  {
+    address: "0xf49a19f72d0e106df462cfd6b5bebe42b6001616",
+    value: "20000000000000000000000",
+  },
+  {
+    address: "0xaa79b87dc8b046a5e4f7d03f1562d7fe5bf98737",
+    value: "19982891249301121060045",
+  },
+  {
+    address: "0xa32aecda752cf4ef89956e83d60c04835d4fa867",
+    value: "19883074040613233034036",
+  },
+  {
+    address: "0x7d990c17573b9fe410767723080fcb1734ff7d5b",
+    value: "19300000000000000000000",
+  },
+  {
+    address: "0x9194b1713a8e07bc47b90fb7937e28e09b6cd100",
+    value: "18996958697380782627609",
+  },
+  {
+    address: "0x763d7d362b59aea3858a92a302e18cd41b1252d4",
+    value: "18391334516136952837161",
+  },
+  {
+    address: "0xb2821c0df0c414ff51d3e8033cba26df6aac587b",
+    value: "18351287498773563409082",
+  },
+  {
+    address: "0xf8d1d34956cea24718cf8687588d6fedbc6d9aa6",
+    value: "16210347854719697914090",
+  },
+  {
+    address: "0x7d547666209755fb833f9b37eebea38ebf513abb",
+    value: "15173167717365084665532",
+  },
+  {
+    address: "0x8a8fd287f9c0d69c8d749b32e10a1e0a96dedcf3",
+    value: "14659629878086914758881",
+  },
+  {
+    address: "0x7944fc7bd79b25e6ffe24921d88a1f36f22be843",
+    value: "12723238120499807147140",
+  },
+  {
+    address: "0x625236038836cecc532664915bd0399647e7826b",
+    value: "12290815853712400561387",
+  },
+  {
+    address: "0x27c72e4bd23c910218d8f06c4a1742e06657c874",
+    value: "12018302760630578685241",
+  },
+  {
+    address: "0x66df5a7715c5d4afbbfa52435c66aa20733be0d1",
+    value: "11733414536443456724835",
+  },
+  {
+    address: "0xf27838b0c3ba2eee13b6ed3fe13a90ef7b57a2cc",
+    value: "11659014372628702702410",
+  },
+  {
+    address: "0xc46c67bb7e84490d7ebdd0b8ecdaca68cf3823f4",
+    value: "11411424481405709047486",
+  },
+  {
+    address: "0x05a1ff0a32bc24265bcb39499d0c5d9a6cb2011c",
+    value: "11405864659628467038270",
+  },
+  {
+    address: "0xb8c2c29ee19d8307cb7255e1cd9cbde883a267d5",
+    value: "11250000000000000000000",
+  },
+  {
+    address: "0x809c9f8dd8ca93a41c3adca4972fa234c28f7714",
+    value: "11243060000000000000000",
+  },
+  {
+    address: "0x072e83cde5c102fdcf32be328034e1bb2dadcb01",
+    value: "10696418434068832438261",
+  },
+  {
+    address: "0x9aa6db877742ad8d8c7fe209f561fbd2be19d5f4",
+    value: "10556313402412479918125",
+  },
+  {
+    address: "0xb760fe1bbc4a2752abcbb28291a57cb0ca99ff44",
+    value: "10498554802154620728587",
+  },
+  {
+    address: "0x865c2f85c9fea1c6ac7f53de07554d68cb92ed88",
+    value: "10069000000000000000000",
+  },
+  {
+    address: "0xf0cdfa126a944849a6e9982253cd5259afae0355",
+    value: "10000000000000000000000",
+  },
+  {
+    address: "0xeee2e0166e342e0b56fe9d5b76ce2c8eadd935b4",
+    value: "10000000000000000000000",
+  },
+  {
+    address: "0x1dba1131000664b884a1ba238464159892252d3a",
+    value: "10000000000000000000000",
+  },
+  {
+    address: "0x00d18ca9782be1caef611017c2fbc1a39779a57c",
+    value: "9810924496430348716829",
+  },
+  {
+    address: "0x2dd3d3b07bc822aa9bef925f06fabacd23e7022a",
+    value: "9256453198232943864182",
+  },
+  {
+    address: "0xcf0fa79c915f12592c352ffe35000fda5c96a158",
+    value: "9170309768509290517730",
+  },
+  {
+    address: "0xd91ec22114897e5e68997f77a6182de3cb09ba9b",
+    value: "9135451629091783114014",
+  },
+  {
+    address: "0x5c44e8982fa3c3239c6e3c5be2cc6663c7c9387e",
+    value: "8958774826732296559778",
+  },
+  {
+    address: "0x826976d7c600d45fb8287ca1d7c76fc8eb732030",
+    value: "8804857519749068400764",
+  },
+  {
+    address: "0x301605c95acbed7a1fd9c2c0deee964e2afbd0c3",
+    value: "8669766331326104346221",
+  },
+  {
+    address: "0x94860ea6872d863e91f3ce3f8cf574ef0859620b",
+    value: "7936331140317771081997",
+  },
+  {
+    address: "0xf0a3b6daac28a0fce094f2cf264e040373d86f3f",
+    value: "7704094489260550514387",
+  },
+  {
+    address: "0x62e4851e88bec4f5c5ee3dd347f2c601a18af1af",
+    value: "7684181740758041360284",
+  },
+  {
+    address: "0xb20a327c9b4da091f454b1ce0e2e4dc5c128b5b4",
+    value: "7645028061477894410027",
+  },
+  {
+    address: "0xff6d6a7718a234a84f740480dbb07f6c09cf1cd5",
+    value: "7552549405998570786801",
+  },
+  {
+    address: "0x85ed40dbca94b5bc73c6c7ec7f4ecaad04a03a22",
+    value: "7079586749257821214900",
+  },
+  {
+    address: "0xc6b0a4c5ba85d082ecd4fb05fbf63eb92ac1083a",
+    value: "6934967373145797296297",
+  },
+  {
+    address: "0x1964b1d5d69f96e6751da98c69b6fbba48a111b5",
+    value: "6902749602011660788496",
+  },
+  {
+    address: "0xdd505da2e2a8017f38a715948c6b6a2922ba27f0",
+    value: "6652498241720091253251",
+  },
+  {
+    address: "0xdf00e071996de3336899bbd5722592b3d972e788",
+    value: "6548367273934649338487",
+  },
+  {
+    address: "0x99272db5353e13c18b711d99d3a8f36ba459f747",
+    value: "6529732812631001434251",
+  },
+  {
+    address: "0x1d921dff757610fbdb0073479e12c0a07d382677",
+    value: "6296981489026211025111",
+  },
+  {
+    address: "0xe5dda44c692a41f19ba07f2f7c546d273e953f15",
+    value: "6008861646286567148361",
+  },
+  {
+    address: "0xb22981ba3fe1de2325935c91a3b717168fb86714",
+    value: "5982146736145093565517",
+  },
+  {
+    address: "0x3c63b262c54f45ba1ca8e127f14a2b93fdc826ca",
+    value: "5885484458838296158363",
+  },
+  {
+    address: "0x5d28fe1e9f895464aab52287d85ebff32b351674",
+    value: "5817822107409703024636",
+  },
+  {
+    address: "0x8aac40061e258d6e45fd13e214710abdf356285a",
+    value: "5759583945780153439456",
+  },
+  {
+    address: "0x0bf920dfe6d36829ab5b0e153857d4ca689e46fb",
+    value: "5676155829832937151907",
+  },
+  {
+    address: "0xec952ed8e7c2aa466cac36fd611d2e87df1243d7",
+    value: "5546076296249841092387",
+  },
+  {
+    address: "0x9885a84930e3c8c865a1d3debdc204f990bab7c3",
+    value: "5528611325631238196561",
+  },
+  {
+    address: "0x6dc43be93a8b5fd37dc16f24872babc6da5e5e3e",
+    value: "5500000000000000000000",
+  },
+  {
+    address: "0x34aa3f359a9d614239015126635ce7732c18fdf3",
+    value: "5450000000000000000000",
+  },
+  {
+    address: "0xb2d60143097b4f992bfbe955a22dbb2acd9a8eab",
+    value: "5283368339220287620317",
+  },
+  {
+    address: "0xe64f06f695de4c4e21ba8f383a2675fd884ac720",
+    value: "5167776262569201962959",
+  },
+  {
+    address: "0x1d8a08c8c3ce0a852cb4da902754991759f7f625",
+    value: "5118603316757110257110",
+  },
+  {
+    address: "0x7f93e58a999d85879c2f051619f6879ba771f2bf",
+    value: "5000000000000000000000",
+  },
+  {
+    address: "0x1026effae689c49f3655e74dc45c8869e3f6fd35",
+    value: "5000000000000000000000",
+  },
+  {
+    address: "0x00000000005dbcb0d0513fcda746382fe8a53468",
+    value: "5000000000000000000000",
+  },
+  {
+    address: "0x1baec9d58603f6eaeddbd66acc56db76215fc8d6",
+    value: "4999000000000000000000",
+  },
+  {
+    address: "0x2fee53687906ba239602ed42cceee2ac8a4ada36",
+    value: "4836637515487919004966",
+  },
+  {
+    address: "0x4d53016e20c8615bfdef02f3a13f969b9a0ec031",
+    value: "4299852051985822905700",
+  },
+  {
+    address: "0x224aba5d489675a7bd3ce07786fada466b46fa0f",
+    value: "4298892913480322562539",
+  },
+  {
+    address: "0xc89ed88b54fd663b86ffd76f6ad2cda09d2ce13c",
+    value: "4100320954081928399553",
+  },
+  {
+    address: "0xdf8f53b9f83e611e1154402992c6f6cb7daf246c",
+    value: "3859672571053859432344",
+  },
+  {
+    address: "0xa0f780d46f103db59cfc5ffec8b25ffd36940ea7",
+    value: "3750869323683277060312",
+  },
+  {
+    address: "0x9ac9c636404c8d46d9eb966d7179983ba5a3941a",
+    value: "3677851857219387970648",
+  },
+  {
+    address: "0x42a63047a1cd8449e3e70adeb7363c4ca01db528",
+    value: "3639911200595328127002",
+  },
+  {
+    address: "0x57f540a736a647ef2d2ef9cd823c4a4e655858a4",
+    value: "3508048441642148988626",
+  },
+  {
+    address: "0x8f942eced007bd3976927b7958b50df126feecb5",
+    value: "3500000000000000000000",
+  },
+  {
+    address: "0xd6f5646d9e7fbee7cc907eb8e12dafa5378431e6",
+    value: "3463693031362682163679",
+  },
+  {
+    address: "0xd3f8a83dd0f5c873be0973dbd67bf0d441ae49d0",
+    value: "3401440641853920438449",
+  },
+  {
+    address: "0xefb49ddb9511180aeefd78da68ea4977fe02b0cb",
+    value: "3383345081694732709465",
+  },
+  {
+    address: "0x701d0ecb3ba780de7b2b36789aec4493a426010a",
+    value: "3354904137712385424183",
+  },
+  {
+    address: "0xad2dcb058f10b4e11611f9c1fc0aa1a532e270d6",
+    value: "3341416707782569085726",
+  },
+  {
+    address: "0xf35960302a07022aba880dffaec2fdd64d5bf1c1",
+    value: "3300000000000000000000",
+  },
+  {
+    address: "0x8041748a2a16e9b7a3980107f4376774421642c8",
+    value: "3265560127693041324048",
+  },
+  {
+    address: "0xf503017d7baf7fbc0fff7492b751025c6a78179b",
+    value: "3165581555832827686204",
+  },
+  {
+    address: "0xcaaa39294a02bf3bf6a806d11d687e244ce56378",
+    value: "3114803139840066859262",
+  },
+  {
+    address: "0x16e8d400ed871fb5e74a2db3c680838c9d383a26",
+    value: "3076630000000000000000",
+  },
+  {
+    address: "0x92b0fd2bd1991b2bdbb1306a719bd45dbfa46768",
+    value: "3000000000000000000000",
+  },
+  {
+    address: "0x48a63097e1ac123b1f5a8bbffafa4afa8192fab0",
+    value: "3000000000000000000000",
+  },
+  {
+    address: "0xcb5fba4419abc4d7c11af0c24ba0f2e555407f5b",
+    value: "2925668968262469768550",
+  },
+  {
+    address: "0xf83775c95a00612d4cac5053dd484ffa81bae0ad",
+    value: "2913071782959538085680",
+  },
+  {
+    address: "0x72e1638bd8cd371bfb04cf665b749a0e4ae38324",
+    value: "2910000000000000000000",
+  },
+  {
+    address: "0xd602d991dc99f6632c9f1e587d93c3c8ce7220b6",
+    value: "2863694092152441590389",
+  },
+  {
+    address: "0xf23ea0b5f14afcbe532a1df273f7b233ebe41c78",
+    value: "2824173008629975833739",
+  },
+  {
+    address: "0x59ae7f21d18b2f5fdc7a99c4fd6dd9e67cec0bc9",
+    value: "2779853163587537923489",
+  },
+  {
+    address: "0x9384eb57f892cce158c9ad5446d815cc7584d42b",
+    value: "2772507473988100759784",
+  },
+  {
+    address: "0x2fe25372a45d024ade1adeb9dce29e4da1368b35",
+    value: "2675752347143973799518",
+  },
+  {
+    address: "0x00432996c5cf8200cf208200613aec2329be0e39",
+    value: "2650000000000000000000",
+  },
+  {
+    address: "0x874b3e815b02d3dcd5008fdee96127c16292ba1f",
+    value: "2617665447664119822700",
+  },
+  {
+    address: "0xed77a2406bb16f56a5dc5cc6d893f6500585a115",
+    value: "2544255197019577706798",
+  },
+  {
+    address: "0xe73a198e7c07c418d7dcfd42f5e953074abbd125",
+    value: "2509939704321444793532",
+  },
+  {
+    address: "0xfb074aba249f6a75eda10996c3efa6d66465b8b3",
+    value: "2447045542334842592122",
+  },
+  {
+    address: "0xdee4fbf0b62febe20000826eaeb939e2cc7876b4",
+    value: "2256701498279929705557",
+  },
+  {
+    address: "0xa444987a5d2c45150399c5cec0c8bf719a6dea3e",
+    value: "2214203280172496987718",
+  },
+  {
+    address: "0x813f5a155cb033fbca32388334d7111251a02b63",
+    value: "2200000000000000000000",
+  },
+  {
+    address: "0xf592ee0e3a20ddd65882e0fe6bfbb4b465a98ae4",
+    value: "2196115780874529785630",
+  },
+  {
+    address: "0xd70a0999e4afcd794ae01dd7194f34d60e5e21f4",
+    value: "2094187103218870392006",
+  },
+  {
+    address: "0x2ce202ad36adb3b7515d2e6ec1395f55298dc230",
+    value: "2087213549232976531918",
+  },
+  {
+    address: "0xa81fa36c51c95b52431038352d3d452c5de5e6e8",
+    value: "2086255002037795237041",
+  },
+  {
+    address: "0xc68e8827fc1dd3b2bc94ca8b0228268f16dd6cf6",
+    value: "2042230000000000000000",
+  },
+  {
+    address: "0xcbc473f08a515cd8e612f63a254278879f1ed315",
+    value: "2000000000000000000000",
+  },
+  {
+    address: "0x05d9eea07cf58f6ed205e4b5ca59a1c98114c459",
+    value: "1998498229080984933638",
+  },
+  {
+    address: "0x2920620b47d51170319a531a2d6d5810610e8c2a",
+    value: "1958677408833187635608",
+  },
+  {
+    address: "0xb1a549920b38b2f7c80443b49b5a75db3a4cd5f5",
+    value: "1884852705992709188382",
+  },
+  {
+    address: "0x864f2c20f55d7b6e80e65332c372c855a67be451",
+    value: "1844571797691994123673",
+  },
+  {
+    address: "0x7e75c3fbe3aa9007d9e93eb948e02329b8b35dfe",
+    value: "1800000000000000000000",
+  },
+  {
+    address: "0xae9a1bbd8a53e6bd845d1b493cd174e6b0531eb8",
+    value: "1778925120508348120399",
+  },
+  {
+    address: "0xdc0046b52e2e38aee2271b6171ebb65ccd337518",
+    value: "1777340000000000000000",
+  },
+  {
+    address: "0xb3e43abf014cb2d8cf8dc3d8c2e62157e6093343",
+    value: "1754160929092843211841",
+  },
+  {
+    address: "0x39c00e3584a2176f55bb31bdc3450889927f5016",
+    value: "1636415901667659230162",
+  },
+  {
+    address: "0x66d9dfddc3ad45d6383d5b9e9354f60bc9d16a8e",
+    value: "1629846921072967583627",
+  },
+  {
+    address: "0x5ad3b55625553cef54d7561cd256658537d54aad",
+    value: "1575000000000000000000",
+  },
+  {
+    address: "0x0f46540678c7e6d2ef983b382cc07fa815ab148c",
+    value: "1500000000000000000000",
+  },
+  {
+    address: "0x02317bb3f16ce21e9239c217b21bd18aa24ab0d3",
+    value: "1475564232853294647017",
+  },
+  {
+    address: "0xc7bf5da444c923aaa80d77d288e86f3246dd4170",
+    value: "1473213168914212639070",
+  },
+  {
+    address: "0x3b0459c53fd6fc216fea8817512990c886310386",
+    value: "1410154379385407469676",
+  },
+  {
+    address: "0x18190831552ec91237d68ff94fe9124ccbac4163",
+    value: "1405000000000000000000",
+  },
+  {
+    address: "0xac446dd360716acef4e930612dcb1f652a98d750",
+    value: "1374677796902325638554",
+  },
+  {
+    address: "0xe50ceff4ecde1a76afc5153a99e5c7f84d1d25c8",
+    value: "1371738401154268590608",
+  },
+  {
+    address: "0x6d3b98452c8f2dffa0487ce6c66ca3cc3ab01308",
+    value: "1294961239587444561704",
+  },
+  {
+    address: "0x9d5a0ec9dcab69075e4ff40b46813f6d952bbd65",
+    value: "1257993596063645080527",
+  },
+  {
+    address: "0x81e80b838e04644a93e4f3c701038889d3a1b95e",
+    value: "1183000000000000000000",
+  },
+  {
+    address: "0x6543c99d0e073c140fd08a741c6cfdcd1449da94",
+    value: "1171927636528251737279",
+  },
+  {
+    address: "0x9959dda625ba12809849f9b0f44e660c0f136733",
+    value: "1128506046209428653185",
+  },
+  {
+    address: "0x317bbc1927be411cd05615d2ffdf8d320c6c4052",
+    value: "1100000000000000000000",
+  },
+  {
+    address: "0x5b4df17ca5a3339d722028a585582693742e5b5a",
+    value: "1088478717586715293511",
+  },
+  {
+    address: "0x2915f137dab849f0b27aaab4d0dbd67aaee3c5f0",
+    value: "1075000000000000000000",
+  },
+  {
+    address: "0x0a1f2e1a4585bbf5e54a894fffa74133654bfadc",
+    value: "1072998931203228528750",
+  },
+  {
+    address: "0xe5f470e376554fb613a43fde223e40a3bb338765",
+    value: "1072200869040058408061",
+  },
+  {
+    address: "0x6636a1ccbdf54485067304c1a590de016dead9f0",
+    value: "1015421455934556980610",
+  },
+  {
+    address: "0xefa21088f3830cd7d9f526ea268f7aaba34f785f",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0xc5c4f3145b252407e25cfc92da0fb0bce2bc3310",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0xb08f95dbc639621dbaf48a472ae8fce0f6f56a6e",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0x7d678b9218ac289e0c9f18c82f546c988bfe3022",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0x5b93ff82faaf241c15997ea3975419dddd8362c5",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0x37341cbb14c5f128a70b149726ad8b2ce6f4c793",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0x204323a83506ca93ef23731894b450071541e9df",
+    value: "1000000000000000000000",
+  },
+  {
+    address: "0xe95a7326b06a97bf30e348e4840c1b8de4dbedf8",
+    value: "999512987264556882164",
+  },
+  {
+    address: "0x4ae70efbc57df5f16fc5fa2ccf016887e6312afb",
+    value: "999000000000000000000",
+  },
+  {
+    address: "0x6576dcd9f751c99adb07411b22ddda0be7ffe420",
+    value: "996090000000000000000",
+  },
+  {
+    address: "0x45e036da221032d814a8bf0ef46943f83e95b409",
+    value: "967201212523210361673",
+  },
+  {
+    address: "0x8aa27e90e139d5ab5704df69429341cbcb2d2464",
+    value: "938257439281964637707",
+  },
+  {
+    address: "0x6466386897a82cb8c96c8680631da7489f154004",
+    value: "936531885966217773034",
+  },
+  {
+    address: "0x9e476f951dc5af8e4f7fd02c78f0cd765a25c8c0",
+    value: "925584816960458499874",
+  },
+  {
+    address: "0x21c9aba2392dd5e15ce74bf9c8685ac4907b5fab",
+    value: "916213274182345572450",
+  },
+  {
+    address: "0x1dc96f305645b5ac12dda5151eb6704677c7db12",
+    value: "899000000000000000000",
+  },
+  {
+    address: "0x0363f3c31076a64b85ceb69a28f958a7c1181cee",
+    value: "882500000000000000000",
+  },
+  {
+    address: "0xed8db37778804a913670d9367aaf4f043aad938b",
+    value: "819615007143598792780",
+  },
+  {
+    address: "0xa4d506434445bb7303ea34a07bc38484cdc64a95",
+    value: "800000000000000000000",
+  },
+  {
+    address: "0xf2283b9c60bdbaf9b0c41b2f52907af7362a3302",
+    value: "751934901837275333832",
+  },
+  {
+    address: "0x8758e5741de847363dd2715a62431cc0cbda4ca6",
+    value: "731947201339446235004",
+  },
+  {
+    address: "0xd06a907b7baaef9958fedc765f2c1d66c7cb4212",
+    value: "717982581038826164716",
+  },
+  {
+    address: "0xb00784c401d42f03ccbe1e85b9f2a4ae056c7251",
+    value: "717760000000000000000",
+  },
+  {
+    address: "0x29a31e68a5c3b052ac04a663f1e60a2cf184ff53",
+    value: "700000000000000000000",
+  },
+  {
+    address: "0x63a32f1595a68e811496d820680b74a5cca303c5",
+    value: "698370470770733887344",
+  },
+  {
+    address: "0x79de94216395eafe072b8b50216b5648edb3f609",
+    value: "697124896262425965641",
+  },
+  {
+    address: "0xc7b2f15b62f186dcc69f35cd9ae833f6de6146ab",
+    value: "692892661446761105181",
+  },
+  {
+    address: "0x4194ce73ac3fbbece8ffa878c2b5a8c90333e724",
+    value: "684330028194794335626",
+  },
+  {
+    address: "0xa0a1a1736d98c835bd2608abfe242ba7e65d2126",
+    value: "682805326084994361180",
+  },
+  {
+    address: "0x8b580433568e521ad351b92b98150c0c65ce69b7",
+    value: "661870745004148999196",
+  },
+  {
+    address: "0x177a68f3c836a2a37a3c594cd16004d7b9589476",
+    value: "651868002909853711110",
+  },
+  {
+    address: "0xdcdf8164aaf9345e48e747e95b07d2782d09cb40",
+    value: "642720000000000000000",
+  },
+  {
+    address: "0x80fe61720fe2bb8b54b028f037189de0b13aa50b",
+    value: "632977600619007985025",
+  },
+  {
+    address: "0x489add7680605f6fc4806595cd75e65d7f1675eb",
+    value: "632317281994053537740",
+  },
+  {
+    address: "0x9de0c4bcc1fb8faab56aa04c2e18fb3d8b694bbb",
+    value: "631060559171702593998",
+  },
+  {
+    address: "0x63960487872023231e4c3fbde536c34e2c93de55",
+    value: "620300489763405960755",
+  },
+  {
+    address: "0xfe6b3daf5db93c8203316956844b3ae23521a722",
+    value: "615889155627005734734",
+  },
+  {
+    address: "0x9f55abf3a9b3ab9401131db5961a1845545dbd47",
+    value: "602892612864828596631",
+  },
+  {
+    address: "0xe23e317463fac259700d95572ee3417ccbb3cb8c",
+    value: "602708617582230319180",
+  },
+  {
+    address: "0x56e9cbe44e612aad90737fcd911c4756423c533a",
+    value: "597631266317134149809",
+  },
+  {
+    address: "0x1e975f53956d644868f3ea25690b1bbeda658565",
+    value: "595233600071422443252",
+  },
+  {
+    address: "0x85f9c38a44efb45cef47cbf510e6e18cddf2a78a",
+    value: "589213591964995381277",
+  },
+  {
+    address: "0x3e7f054563682c42bd4907b88d0dc27557992576",
+    value: "580558939790939030764",
+  },
+  {
+    address: "0xca4ad39f872e89ef23eabd5716363fc22513e147",
+    value: "565000000000000000000",
+  },
+  {
+    address: "0xb81e88279f3208001aeda20689d3e5d818758dbf",
+    value: "544000000000000000000",
+  },
+  {
+    address: "0x3eb717f284ea6ef65b9d770694bbc6c7e1b1dd84",
+    value: "540708244418459573047",
+  },
+  {
+    address: "0x6f4a8930ef9c175ec0f3f63a97686d5c505e0e32",
+    value: "532945478745165024518",
+  },
+  {
+    address: "0x38f80f8f76b1c44b2beefb63bb561f570fb6ddb6",
+    value: "529050118734524618187",
+  },
+  {
+    address: "0x7fcfeb41316c67ca985c652e639367762d5e98da",
+    value: "526897475544168432321",
+  },
+  {
+    address: "0x3eed07fc683037565e54408a6800c9c3a6f70c45",
+    value: "513180933427995320398",
+  },
+  {
+    address: "0xc154eb56388c8ce13492b3b149d451bb1b42ac5b",
+    value: "503782800000000000000",
+  },
+  {
+    address: "0x0e76602324bd961e3e928b4bd5dc578b9883df11",
+    value: "502920000000000000000",
+  },
+  {
+    address: "0x52fa3cd7c8926cf515a454658a27d710cf447b2f",
+    value: "502525292200475222762",
+  },
+  {
+    address: "0xf9299c8663d195481cd54b6f7e32bb45ad1c9a2b",
+    value: "500000000000000000000",
+  },
+  {
+    address: "0xf11704511975cc5908f6dbd89be922f5c86c1055",
+    value: "500000000000000000000",
+  },
+  {
+    address: "0x5ac583feb2b1f288c0a51d6cdca2e8c814bfe93b",
+    value: "500000000000000000000",
+  },
+  {
+    address: "0x152ad2e12e102abf64280c5e3d70257effb0ede0",
+    value: "500000000000000000000",
+  },
+  {
+    address: "0x933fe343746549ac10d471ce4dfa20baab3ede86",
+    value: "499000000000000000000",
+  },
+  {
+    address: "0x1210ba92eb82cc256213c78f0ef9d5212c7034a9",
+    value: "474944178918435502006",
+  },
+  {
+    address: "0x6432c098bfeda15dd4d0692c46bdb43091a95171",
+    value: "469878273589344293938",
+  },
+  {
+    address: "0x44ddf3e35cd2d629d78674ff6bf5b953e2b069fe",
+    value: "469383204924501890795",
+  },
+  {
+    address: "0xc91d300d342ec4ebbc61b3ae75dc5d7245109dd9",
+    value: "454607241570024334980",
+  },
+  {
+    address: "0x12a63bd7c98fc55c4402923991685303ca7b75a2",
+    value: "451371236776884889688",
+  },
+  {
+    address: "0xb19df2bce7c036b69b20180413b58012fa328e58",
+    value: "433658914296518138776",
+  },
+  {
+    address: "0x7710e7e881333fd3396ca5966bed6e72746b612d",
+    value: "426929201310573885391",
+  },
+  {
+    address: "0xf780ee9f9e50248e7f8433a132a4b0b00b3da313",
+    value: "426708320214695975142",
+  },
+  {
+    address: "0xadb620ec86eeb3570cc142bbc4b5556886cd259b",
+    value: "411386376053585588081",
+  },
+  {
+    address: "0x0f5bd2404ebb70410462c22cacb062cd285bfc52",
+    value: "409600000000000000000",
+  },
+  {
+    address: "0xb24f31bc22338ff0425f2e16c4902a8aa307807d",
+    value: "407625265504087951796",
+  },
+  {
+    address: "0x10a84b835c5df26f2a380b3e00bcc84a66cd2d34",
+    value: "400000000000000000000",
+  },
+  {
+    address: "0xefcdc3a4164846b7e39c4708a7c816f4459f26bf",
+    value: "390000000000000000000",
+  },
+  {
+    address: "0xc7d0fd6dd83955b027f0f038c861d7d031c59785",
+    value: "376582190763795249736",
+  },
+  {
+    address: "0x41e235560175a75c49c2e11e0e7a452a81c35808",
+    value: "367883828572930299015",
+  },
+  {
+    address: "0x0a1751fcf226669952c0baf7361f90bc274dc03a",
+    value: "349000000000000000000",
+  },
+  {
+    address: "0x1e8ee48d0621289297693fc98914da2efdce1477",
+    value: "301620000000000000000",
+  },
+  {
+    address: "0x90299ec59b94398a3a31a795bc585f743d0e5cc9",
+    value: "300000000000000000000",
+  },
+  {
+    address: "0x37ec0203c1cc3cb574c4144d490f770b86e3b557",
+    value: "300000000000000000000",
+  },
+  {
+    address: "0x88b353202e61fffef56bbfbc2748839e7c707e9f",
+    value: "290901394625329974003",
+  },
+  {
+    address: "0x6fd155b9d52f80e8a73a8a2537268602978486e2",
+    value: "285772533424253791275",
+  },
+  {
+    address: "0xceacc735c67217101abd0ffb46661c42dec366a8",
+    value: "263546235476608057720",
+  },
+  {
+    address: "0x83e57888cd55c3ea1cfbf0114c963564d81e318d",
+    value: "244479052315707175659",
+  },
+  {
+    address: "0x9f2942ff27e40445d3cb2aad90f84c3a03574f26",
+    value: "244404484802849972690",
+  },
+  {
+    address: "0xbcae3f1ab2ac4a82d199720be78c5a32bb144e8b",
+    value: "232087793548284134507",
+  },
+  {
+    address: "0xeebc0ff65baeafbd971ff01b0e28aabd379936ad",
+    value: "200420000000000000000",
+  },
+  {
+    address: "0x5c95fed053997f30b7aa69979c208a5d15479f5d",
+    value: "200000000000000000000",
+  },
+  {
+    address: "0x5299c7d2b73b6a96231081dabfd54dfcc84fedeb",
+    value: "200000000000000000000",
+  },
+  {
+    address: "0xc2fb4b3ea53e10c88d193e709a81c4dc7aec902e",
+    value: "184111848527104673601",
+  },
+  {
+    address: "0x1308d923e02c38492962d75c26e487ffcdce821c",
+    value: "178420420999829775795",
+  },
+  {
+    address: "0x2982e755b58dbbb1df8240748f8976eb0cd8a3b5",
+    value: "176098157505267319498",
+  },
+  {
+    address: "0x5832834966933bec942bb06a3b55dd1176cbddd2",
+    value: "173906851169935623649",
+  },
+  {
+    address: "0x9542225b26ae10b4c47625d75da5123d838b30d8",
+    value: "165190524278738277357",
+  },
+  {
+    address: "0xf0da4128a4ed2ed3ffe5d8618a6e002f338b8e52",
+    value: "159116840039310795875",
+  },
+  {
+    address: "0x76efa04a76d4662ee3544ac40bbecbe0cd196ad4",
+    value: "148000000000000000000",
+  },
+  {
+    address: "0x760c7b2403a9ee72e704b35adecf94e3d42a9d4f",
+    value: "145000000000000000000",
+  },
+  {
+    address: "0xe621a0b2d4f837fa2a4d15059dae91ea8d9aa9ac",
+    value: "126486289294933689676",
+  },
+  {
+    address: "0xedb892bbd19188cd2def63249d6a657ac6f98935",
+    value: "100606661087779151864",
+  },
+  {
+    address: "0x7136fbddd4dffa2369a9283b6e90a040318011ca",
+    value: "100000000000000000000",
+  },
+  {
+    address: "0x47b2c37ffee6e8d71ef9dfbe84ee596571885492",
+    value: "99990000000000000000",
+  },
+  {
+    address: "0xd2fa59811af055e0e94d570ea7f9800c0e5c0428",
+    value: "99770263383524411582",
+  },
+  {
+    address: "0x9f082e184259d2f7089df5ced36679bb88bfe123",
+    value: "96660996962300161108",
+  },
+  {
+    address: "0xe0144fa05a0d32b5b1de10ccee7211616b3e3ef0",
+    value: "95543385379543766765",
+  },
+  {
+    address: "0x28499c2115299beff0c07fe7574ce7222d891c76",
+    value: "94584318327126277625",
+  },
+  {
+    address: "0x884ff907d5fb8bae239b64aa8ad18ba3f8196038",
+    value: "81857416406069189690",
+  },
+  {
+    address: "0xcaff17d5c7c349be300e93cbaf56bc868ef75982",
+    value: "76064161290520005099",
+  },
+  {
+    address: "0x33dcb3ec1918b6913c00954d8f40bfc04a5cfd20",
+    value: "74000000000000000000",
+  },
+  {
+    address: "0x82d41c07c20437d8398a2c5d62a03c64c7235f45",
+    value: "70762361959515862335",
+  },
+  {
+    address: "0xfe96d1ed2a4c9e60e0e3030609af0361a515169e",
+    value: "68071304558861877234",
+  },
+  {
+    address: "0xcdaeb3bce9df386b574f2aefb06b9a2a156835b4",
+    value: "4000000000000000000",
+  },
+  {
+    address: "0xfb2e9d1c95dcd5665ee230352d9973263f822f8a",
+    value: "2000000000000000000",
+  },
+  {
+    address: "0xb525f6b3b5efcc0c54582de2f08d890f7793e3e4",
+    value: "2000000000000000000",
+  },
+  {
+    address: "0xe32bf4b7b9cb091b04e8500344a578d56b8f2593",
+    value: "9003274621494617",
+  },
+  {
+    address: "0x69e3c9f8a735ddcccfbad2dabde9963d55202988",
+    value: "8351287088158375",
+  },
+  {
+    address: "0x17a7e7f6a493d137e84b4420575527f6ef725f8c",
+    value: "8126500031665712",
+  },
+  {
+    address: "0xa2ef65aececb83cd1bd3579a8669779099317952",
+    value: "1961918494390914",
+  },
+];

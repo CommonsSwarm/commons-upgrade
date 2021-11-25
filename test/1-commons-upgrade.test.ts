@@ -1,6 +1,6 @@
 import { EVMcrispr, App, Entity, LabeledAppIdentifier } from "@1hive/evmcrispr";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Contract, Signer } from "ethers";
+import { Signer } from "ethers";
 import { ethers } from "hardhat";
 import { impersonateAddress } from "../helpers/rpc";
 import {
@@ -8,20 +8,20 @@ import {
   hasPermission as checkPermission,
   isAppInstalled as checkInstalledApp,
   isPermissionManager as checkPermissionManager,
-  pct16,
-  ppm,
   prepareEVMcrisprSigner,
 } from "./helpers";
 import { buildCommonsUpgradeActions } from "../scripts/helpers/commons-upgrade";
-
-// xDai
-const GARDEN_ADDRESS = "0x4ae7b62f1579b4149750a609ef9b830bc72272f8";
-const HATCH_DAO_ADDRESS = "0x4625c2c3E1Bc9323CC1A9dc312F3188e8dE83f42";
+import {
+  ENTRY_TRIBUTE,
+  EXIT_TRIBUTE,
+  RESERVE_RATIO,
+  XDAI_GARDENS_DAO_ADDRESS,
+  XDAI_HATCH_DAO_ADDRESS,
+} from "./params";
 
 describe("Commons Upgrade", () => {
   let commonsEVMcrispr: EVMcrispr;
   let hatchEVMcrispr: EVMcrispr;
-  let acl: Contract;
   let signer: SignerWithAddress;
   let executorSigner: Signer;
 
@@ -29,7 +29,12 @@ describe("Commons Upgrade", () => {
     app: LabeledAppIdentifier,
     expectedRepo: string
   ): Promise<void> => {
-    checkInstalledApp(commonsEVMcrispr, app, GARDEN_ADDRESS, expectedRepo);
+    checkInstalledApp(
+      commonsEVMcrispr,
+      app,
+      XDAI_GARDENS_DAO_ADDRESS,
+      expectedRepo
+    );
   };
 
   const isPermissionManager = async (
@@ -61,24 +66,21 @@ describe("Commons Upgrade", () => {
     signer = (await ethers.getSigners())[0];
     signer = prepareEVMcrisprSigner(signer);
 
-    hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
-    commonsEVMcrispr = await EVMcrispr.create(GARDEN_ADDRESS, signer);
+    hatchEVMcrispr = await EVMcrispr.create(XDAI_HATCH_DAO_ADDRESS, signer);
+    commonsEVMcrispr = await EVMcrispr.create(XDAI_GARDENS_DAO_ADDRESS, signer);
 
     executorSigner = await impersonateAddress(
       commonsEVMcrispr.app("disputable-voting.open")
     );
-
-    const aclApp = commonsEVMcrispr.appCache.get("acl:0");
-    acl = new Contract(aclApp.address, aclApp.abiInterface, signer);
   });
 
   before("Execute commons upgrade script", async () => {
     const commonsUpgradeActionFns = await buildCommonsUpgradeActions(
       commonsEVMcrispr,
       hatchEVMcrispr,
-      pct16(10).toString(),
-      pct16(20).toString(),
-      ppm(0.01)
+      ENTRY_TRIBUTE,
+      EXIT_TRIBUTE,
+      RESERVE_RATIO
     );
     await executeActions(commonsUpgradeActionFns, executorSigner);
   });

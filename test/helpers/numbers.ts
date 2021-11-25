@@ -10,3 +10,5 @@ export const toDecimals = (amount, decimals = 18) => {
 export const pct16 = (x: number | string) => toDecimals(x, 16);
 
 export const ppm = (x: number | string): number => Number(x) * 1e6;
+
+export const PCT_BASE = pct16(100);

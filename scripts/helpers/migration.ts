@@ -13,8 +13,7 @@ export const buildMigrationAction = async (
   newVault1Pct: BigNumber,
   vestingStartDate: number,
   vestingCliffPeriod: number,
-  vestingCompletePeriod: number,
-  signer: Signer
+  vestingCompletePeriod: number
 ): Promise<ActionFunction[]> => {
   const hatch = await getAppContract(
     "marketplace-hatch.open:0",

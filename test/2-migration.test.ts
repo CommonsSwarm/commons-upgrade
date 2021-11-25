@@ -1,33 +1,37 @@
 import { ActionFunction, Address, EVMcrispr } from "@1hive/evmcrispr";
 import { Signer } from "@ethersproject/abstract-signer";
+import { BigNumber } from "@ethersproject/bignumber";
 import { Contract } from "@ethersproject/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
 import { artifacts, ethers } from "hardhat";
 import { impersonateAddress, resetForkedChain } from "../helpers/rpc";
 import {
-  DAY,
   executeActions,
   getAppContract,
   getEvents,
-  getTimestamp,
   hasPermission,
   MAX_TX_GAS_LIMIT,
-  pct16,
-  ppm,
+  PCT_BASE,
   prepareEVMcrisprSigner,
 } from "./helpers";
 import { buildCommonsUpgradeActions } from "../scripts/helpers/commons-upgrade";
-import { BigNumber } from "@ethersproject/bignumber";
-import { getTokenHolders } from "./helpers/token";
 import {
   buildMigrationAction,
   claimTokens,
 } from "../scripts/helpers/migration";
-
-// xDai
-const GARDEN_DAO_ADDRESS = "0x4ae7b62f1579b4149750a609ef9b830bc72272f8";
-const HATCH_DAO_ADDRESS = "0x4625c2c3E1Bc9323CC1A9dc312F3188e8dE83f42";
+import {
+  ENTRY_TRIBUTE,
+  EXIT_TRIBUTE,
+  HATCH_TOKEN_HOLDERS,
+  RESERVE_RATIO,
+  VAULT1_PCT,
+  VESTING_CLIFF_PERIOD,
+  VESTING_COMPLETE_PERIOD,
+  VESTING_START_DATE,
+  XDAI_GARDENS_DAO_ADDRESS,
+  XDAI_HATCH_DAO_ADDRESS,
+} from "./params";
 
 describe("Hatch migration", () => {
   let hatchEVMcrispr: EVMcrispr;
@@ -38,19 +42,12 @@ describe("Hatch migration", () => {
   let signer: SignerWithAddress;
 
   let hatch: Contract;
-  let newMigrationTools: Contract;
   let migrationActionFns: ActionFunction[];
 
   // Migration params
   let newVault1: Contract;
   let newVault2: Contract;
   let vaultTokenAddress: Address;
-  const pct = pct16(20);
-  const vestingStartDate = getTimestamp() + 90 * DAY;
-  const vestingCliffPeriod = 0;
-  const vestingCompletePeriod = (365 - 90) * DAY;
-
-  let PCT_BASE: BigNumber;
 
   before(async () => {
     await resetForkedChain();
@@ -60,8 +57,8 @@ describe("Hatch migration", () => {
     [signer] = await ethers.getSigners();
     signer = prepareEVMcrisprSigner(signer);
 
-    hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
-    commonsEVMcrispr = await EVMcrispr.create(GARDEN_DAO_ADDRESS, signer);
+    hatchEVMcrispr = await EVMcrispr.create(XDAI_HATCH_DAO_ADDRESS, signer);
+    commonsEVMcrispr = await EVMcrispr.create(XDAI_GARDENS_DAO_ADDRESS, signer);
 
     hatchExecutorSigner = await impersonateAddress(
       hatchEVMcrispr.app("dandelion-voting.1hive")
@@ -78,25 +75,14 @@ describe("Hatch migration", () => {
     const actionFns = await buildCommonsUpgradeActions(
       commonsEVMcrispr,
       hatchEVMcrispr,
-      pct16(10).toString(),
-      pct16(20).toString(),
-      ppm(0.01)
+      ENTRY_TRIBUTE,
+      EXIT_TRIBUTE,
+      RESERVE_RATIO
     );
     await executeActions(actionFns, commonsExecutorSigner);
   });
 
   before("Prepare migration", async () => {
-    const hatchMigrationTools = getAppContract(
-      "migration-tools-beta.open:0",
-      hatchEVMcrispr
-    );
-    newMigrationTools = getAppContract(
-      "migration-tools.open:mtb",
-      commonsEVMcrispr
-    );
-
-    PCT_BASE = (await hatchMigrationTools.PCT_BASE()) as BigNumber;
-
     newVault1 = getAppContract("agent:1", commonsEVMcrispr);
     newVault2 = getAppContract("agent:reserve", commonsEVMcrispr);
 
@@ -105,11 +91,10 @@ describe("Hatch migration", () => {
     migrationActionFns = await buildMigrationAction(
       hatchEVMcrispr,
       commonsEVMcrispr,
-      pct,
-      vestingStartDate,
-      vestingCliffPeriod,
-      vestingCompletePeriod,
-      signer
+      VAULT1_PCT,
+      VESTING_START_DATE,
+      VESTING_CLIFF_PERIOD,
+      VESTING_COMPLETE_PERIOD
     );
   });
 
@@ -133,19 +118,25 @@ describe("Hatch migration", () => {
       vaultTokenAddress
     )) as BigNumber;
 
-    const expectedNewVault1Funds = hatchTotalFunds.mul(pct).div(PCT_BASE);
+    const expectedNewVault1Funds = hatchTotalFunds
+      .mul(VAULT1_PCT)
+      .div(PCT_BASE);
     const expectedNewVault2Funds = hatchTotalFunds.sub(expectedNewVault1Funds);
 
     expect(newVault1Funds).to.be.equal(expectedNewVault1Funds);
     expect(newVault2Funds).to.be.equal(expectedNewVault2Funds);
   });
 
-  describe("when claiming new Commons DAO tokens for a group of hatchers", () => {
+  describe("when claiming new Commons DAO tokens for all hatchers", () => {
     let hatchTokenHolders: { address: string; value: string }[];
     let commonsTokenManager: Contract;
 
     before("Claim tokens", async () => {
-      hatchTokenHolders = await getTokenHolders(await hatch.token(), 10);
+      const newMigrationTools = getAppContract(
+        "migration-tools.open:mtb",
+        commonsEVMcrispr
+      );
+      hatchTokenHolders = HATCH_TOKEN_HOLDERS;
 
       const hatchTokenHolderAddresses = hatchTokenHolders.map((holder) =>
         holder.address.toLowerCase()
@@ -196,12 +187,12 @@ describe("Hatch migration", () => {
       const transferableBalanceAfterCliffPeriod =
         await commonsTokenManager.transferableBalance(
           holderAddress,
-          vestingStartDate + vestingCliffPeriod + 1
+          VESTING_START_DATE + VESTING_CLIFF_PERIOD + 1
         );
       const transferableBalanceCompletePeriod =
         await commonsTokenManager.transferableBalance(
           holderAddress,
-          vestingStartDate + vestingCompletePeriod
+          VESTING_START_DATE + VESTING_COMPLETE_PERIOD
         );
 
       expect(transferableBalanceNow, "Claimed tokens not vested").to.be.equal(
@@ -210,7 +201,7 @@ describe("Hatch migration", () => {
       expect(
         transferableBalanceAfterCliffPeriod,
         "Invalid unvested tokens after cliff period"
-      ).to.be.equal((1 / vestingCompletePeriod) * Number(holderValue));
+      ).to.be.equal((1 / VESTING_COMPLETE_PERIOD) * Number(holderValue));
       expect(
         transferableBalanceCompletePeriod,
         "Claimed tokens not completely unvested"

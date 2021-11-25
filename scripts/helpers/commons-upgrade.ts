@@ -1,12 +1,13 @@
 import { ActionFunction, EVMcrispr } from "@1hive/evmcrispr";
+import { BigNumber } from "@ethersproject/bignumber";
 import { getAppContract } from "../../test/helpers";
 
 export const buildCommonsUpgradeActions = async (
   commonsEVMcrispr: EVMcrispr,
   hatchEVMcrispr: EVMcrispr,
-  entryTribute: string,
-  exitTribute: string,
-  reserveRatio: number
+  entryTribute: string | BigNumber,
+  exitTribute: string | BigNumber,
+  reserveRatio: number | BigNumber | string
 ): Promise<ActionFunction[]> => {
   const hatchApp = getAppContract("marketplace-hatch.open:0", hatchEVMcrispr);
   const collateralTokenAddress = await hatchApp.contributionToken();
