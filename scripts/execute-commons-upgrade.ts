@@ -7,35 +7,22 @@ import {
   stakeTokens,
   vote,
 } from "../helpers/gardens";
-import { buildCommonsUpgradeActions } from "./helpers/commons-upgrade";
-import { MAX_TX_GAS_LIMIT } from "../test/helpers";
+import { buildCommonsUpgradeActions } from "./actions/commons-upgrade";
+import { GARDEN_DAO_ADDRESS, HATCH_DAO_ADDRESS } from "../commons-config";
 
 let spinner = ora();
-
-// COMMONS UPGRADE PARAMETERS
-const gardensDAOAddress = "0x5672542F00Db5db374c13944C249fE925Aa325A6"; // Gardens DAO to be upgraded.
-const collateralTokenAddress = "0xc7ad46e0b8a400bb3c915120d284aafba8fc4735"; // ABC's collateral token (e.g. wxDAI).
-const hatchMigrationToolsAddress = "0xbfb0c36ab2daf889e51854e5e65be453251a130d"; // Migration tools app installed on the Hatch.
-const entryTribute = "0.1e18"; // The entry tribute to be deducted from buy order.
-const exitTribute = "0.2e18"; // The exit tribute to be deducted from sell orders.
-const reserveRatio = 0.2; // The reserve ratio to be used for that collateral token.
 
 async function main() {
   const signer = (await ethers.getSigners())[0];
 
-  spinner = spinner.start(`Connect evmcrispr to DAO ${gardensDAOAddress}`);
+  spinner = spinner.start(`Connect evmcrispr to DAO ${GARDEN_DAO_ADDRESS}`);
 
-  const evmcrispr = await EVMcrispr.create(gardensDAOAddress, signer);
+  const evmcrispr = await EVMcrispr.create(GARDEN_DAO_ADDRESS, signer);
+  const hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
 
-  spinner = spinner.succeed();
-
-  const commonsUpgradeAction = await buildCommonsUpgradeActions(
+  const commonsUpgradeActionFns = await buildCommonsUpgradeActions(
     evmcrispr,
-    hatchMigrationToolsAddress,
-    collateralTokenAddress,
-    entryTribute,
-    exitTribute,
-    reserveRatio
+    hatchEVMcrispr
   );
 
   spinner.succeed();
@@ -48,15 +35,13 @@ async function main() {
   // Stake collateral action amount
   await stakeTokens(gardenContext);
 
-  spinner = spinner.start("Forward Commons Upgrade script");
+  spinner = spinner.start(`Forwarding commons upgrade actions`);
 
-  const txReceipt = await (
-    await signer.sendTransaction({
-      ...commonsUpgradeAction,
-      gasLimit: MAX_TX_GAS_LIMIT,
-      gasPrice: MAX_TX_GAS_LIMIT,
-    })
-  ).wait();
+  const txReceipt = await evmcrispr.forward(
+    commonsUpgradeActionFns,
+    ["disputable-voting.open"],
+    { context: "Commons Upgrade" }
+  );
 
   spinner = spinner.succeed(
     `Commons Upgrade script forwarded. Tx hash: ${txReceipt.transactionHash}`
