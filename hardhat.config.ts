@@ -10,7 +10,10 @@ import "hardhat-gas-reporter";
 import "solidity-coverage";
 
 import { task, HardhatUserConfig } from "hardhat/config";
-import { HttpNetworkUserConfig } from "hardhat/types";
+import {
+  HardhatNetworkForkingConfig,
+  HttpNetworkUserConfig,
+} from "hardhat/types";
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
@@ -41,14 +44,15 @@ function mnemonic() {
   return "";
 }
 
-const forking = {
+const forking: HardhatNetworkForkingConfig = {
   // RINKEBY
   // url: "https://eth-rinkeby.alchemyapi.io/v2/zWeBt8YowIcK93EPCcp3862fvKTUsLDO",
   // blockNumber: 9642000,
 
   // XDAI
   url: "https://xdai-archive.blockscout.com",
-  blockNumber: 19087149,
+  blockNumber: 19427100,
+  enabled: true,
 };
 
 const config: HardhatUserConfig = {
@@ -76,7 +80,7 @@ const config: HardhatUserConfig = {
     ],
   },
   mocha: {
-    timeout: 0,
+    timeout: 1000000,
   },
   typechain: {
     outDir: "typechain",
@@ -154,13 +158,13 @@ const config: HardhatUserConfig = {
     },
     xdai: {
       url: "https://xdai.poanetwork.dev/",
+      gas: 10_000_000,
       gasPrice: 1000000000,
       accounts: {
         mnemonic: mnemonic(),
       },
       forking: {
         url: "https://xdai-archive.blockscout.com",
-        blockNumber: 15627460,
       },
     },
     matic: {
