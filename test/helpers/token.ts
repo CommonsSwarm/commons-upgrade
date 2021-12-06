@@ -1,7 +1,12 @@
 import { Address } from "@1hive/evmcrispr";
 import { BigNumber } from "@ethersproject/bignumber";
 import { ContractReceipt } from "@ethersproject/contracts";
+import { addressesEqual } from ".";
 import { ERC20 } from "../../typechain";
+import {
+  HATCH_TOKEN,
+  HATCH_TOKEN_HOLDERS,
+} from "../fixtures/hatch-token-holders";
 
 export const approveTokenAmount = async (
   token: ERC20,
@@ -25,6 +30,12 @@ export const getTokenHolders = async (
   token: Address,
   length = 1000
 ): Promise<{ address: string; value: string }[]> => {
+  if (addressesEqual(token, HATCH_TOKEN)) {
+    return new Promise((resolve) => {
+      resolve(HATCH_TOKEN_HOLDERS);
+    });
+  }
+
   return fetch(
     `https://blockscout.com/xdai/mainnet/api?module=token&action=getTokenHolders&contractaddress=${token}&offset=${length}`
   )

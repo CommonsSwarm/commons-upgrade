@@ -1,3 +1,4 @@
+export const HATCH_TOKEN = "0x799844141c2627bd195c89c3a0c71341d0314c55";
 export const HATCH_TOKEN_HOLDERS = [
   {
     address: "0x45602bfba960277bf917c1b2007d1f03d7bd29e4",

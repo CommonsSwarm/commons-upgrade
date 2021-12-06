@@ -1,8 +1,10 @@
-import { EVMcrispr } from "@1hive/evmcrispr";
+import { ActionFunction, EVMcrispr, normalizeActions } from "@1hive/evmcrispr";
+import { Signer } from "@ethersproject/abstract-signer";
 import { isAddress } from "@ethersproject/address";
 import { Contract } from "@ethersproject/contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import hre from "hardhat";
+import { MAX_TX_GAS_LIMIT } from ".";
 
 const isSpecialEntity = (entity: string): boolean => {
   switch (entity) {
@@ -13,6 +15,22 @@ const isSpecialEntity = (entity: string): boolean => {
     default:
       return false;
   }
+};
+
+export const executeActions = async (
+  actionFns: ActionFunction[],
+  executorSigner: Signer
+): Promise<void> => {
+  const actions = await normalizeActions(actionFns)();
+
+  await Promise.all(
+    actions.map((action) => {
+      return executorSigner.sendTransaction({
+        ...action,
+        gasLimit: MAX_TX_GAS_LIMIT,
+      });
+    })
+  );
 };
 
 export const getAppContract = (

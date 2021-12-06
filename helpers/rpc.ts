@@ -63,6 +63,12 @@ export const takeSnapshot = async (): Promise<string> => {
   })) as Promise<string>;
 };
 
+export const useSnapshot = async (id: string): Promise<string> => {
+  await restoreSnapshot(id);
+
+  return takeSnapshot();
+};
+
 export const increase = async (duration: string | BigNumber) => {
   if (!ethers.BigNumber.isBigNumber(duration)) {
     duration = ethers.BigNumber.from(duration);
@@ -81,6 +87,13 @@ export const increase = async (duration: string | BigNumber) => {
   });
 };
 
+export const mine = async () => {
+  await hre.network.provider.request({
+    method: "evm_mine",
+    params: [],
+  });
+};
+
 export const resetForkedChain = async () => {
   const { url, blockNumber, enabled } = hre.config.networks.hardhat.forking;
   await hre.network.provider.request({
@@ -95,4 +108,15 @@ export const resetForkedChain = async () => {
       },
     ],
   });
+};
+
+export const setAutomine = async (automine: boolean) => {
+  await hre.network.provider.send("evm_setAutomine", [automine]);
+};
+
+export const getLatestBlock = async (): Promise<any> => {
+  return await hre.network.provider.send("eth_getBlockByNumber", [
+    "latest",
+    false,
+  ]);
 };
