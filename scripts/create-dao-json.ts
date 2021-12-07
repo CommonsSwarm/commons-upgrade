@@ -41,11 +41,11 @@ const json = {
   challengeDepositStable: parseFloat(advanced.agreement.challangeDepositStable),
   voteSupportRequired: toPct(taoVoting.supportRequired),
   voteMinAcceptanceQuorum: toPct(taoVoting.minQuorum),
-  voteDurationDays: parseFloat(taoVoting.voteDurationDays),
-  delegatedVotingPeriodDays: parseFloat(taoVoting.delegatedVotingPeriodDays),
+  voteDurationDays: 0.003,
+  delegatedVotingPeriodDays: 0,
   voteQuietEndingPeriodDays: parseFloat(taoVoting.quietEndingPeriodDays),
   voteQuietEndingExtensionDays: parseFloat(taoVoting.quietEndingExtensionDays),
-  voteExecutionDelayDays: parseFloat(taoVoting.executionDelayDays),
+  voteExecutionDelayDays: 0,
 };
 
 console.log(JSON.stringify(json, null, 2));

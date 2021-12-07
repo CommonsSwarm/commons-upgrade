@@ -5,7 +5,7 @@
     "voteDurationDays": "1"
   },
   "garden": {
-    "daoAddress": "0x8ac7945A7E306FFD342C4Bd7b796D557eDa4ed60",
+    "daoAddress": "0xF7ac40A5d0933E13b346ee611D9072B6095f43fC",
     "seeds": {
       "0xc125218F4Df091eE40624784caF7F47B9738086f": 1000,
       "0xf632Ce27Ea72deA30d30C1A9700B6b3bCeAA05cF": 1000,
@@ -26,8 +26,8 @@
   "taoVoting": {
     "supportRequired": "88",
     "minQuorum": "0.8",
-    "voteDurationDays": "0.003",
-    "delegatedVotingPeriodDays": "0",
+    "voteDurationDays": "1.5",
+    "delegatedVotingPeriodDays": "0.5",
     "quietEndingPeriodDays": "0",
     "quietEndingExtensionDays": "0",
     "executionDelayDays": "0"

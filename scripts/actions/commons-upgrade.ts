@@ -4,7 +4,13 @@ import {
   LabeledAppIdentifier,
 } from "@1hive/evmcrispr";
 import { ethers } from "hardhat";
-import { ENTRY_TRIBUTE, EXIT_TRIBUTE } from "../../commons-config";
+import {
+  DELEGATED_VOTING_PERIOD,
+  ENTRY_TRIBUTE,
+  EXECUTION_DELAY,
+  EXIT_TRIBUTE,
+  VOTE_DURATION,
+} from "../../commons-config";
 import { getAppContract } from "../../test/helpers";
 import {
   ABC_LABEL,
@@ -67,6 +73,21 @@ export const buildCommonsUpgradeActions = async (
     ]),
     commonsEVMcrispr.grantPermissions(
       [
+        [
+          "disputable-voting.open",
+          "disputable-voting.open",
+          "CHANGE_VOTE_TIME_ROLE",
+        ],
+        [
+          "disputable-voting.open",
+          "disputable-voting.open",
+          "CHANGE_DELEGATED_VOTING_PERIOD_ROLE",
+        ],
+        [
+          "disputable-voting.open",
+          "disputable-voting.open",
+          "CHANGE_EXECUTION_DELAY_ROLE",
+        ],
         ["disputable-voting.open", ABC_LABEL, "MANAGE_COLLATERAL_TOKEN_ROLE"],
         ["ANY_ENTITY", ABC_LABEL, "MAKE_BUY_ORDER_ROLE"],
         ["ANY_ENTITY", ABC_LABEL, "MAKE_SELL_ORDER_ROLE"],
@@ -97,6 +118,15 @@ export const buildCommonsUpgradeActions = async (
       ],
       "disputable-voting.open"
     ),
+    commonsEVMcrispr
+      .exec("disputable-voting.open")
+      .changeVoteTime(VOTE_DURATION),
+    commonsEVMcrispr
+      .exec("disputable-voting.open")
+      .changeDelegatedVotingPeriod(DELEGATED_VOTING_PERIOD),
+    commonsEVMcrispr
+      .exec("disputable-voting.open")
+      .changeExecutionDelay(EXECUTION_DELAY),
     commonsEVMcrispr.revokePermissions([
       [
         "dynamic-issuance.open",
