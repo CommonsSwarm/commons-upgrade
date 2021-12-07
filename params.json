@@ -26,8 +26,8 @@
   "taoVoting": {
     "supportRequired": "88",
     "minQuorum": "0.8",
-    "voteDurationDays": "1.5",
-    "delegatedVotingPeriodDays": "0.5",
+    "voteDurationDays": "0.003",
+    "delegatedVotingPeriodDays": "0",
     "quietEndingPeriodDays": "0",
     "quietEndingExtensionDays": "0",
     "executionDelayDays": "0"
@@ -48,8 +48,8 @@
       "initialBuy": "250000"
     },
     "token": {
-      "name": "Token Engineering Commons",
-      "symbol": "TEC"
+      "name": "Token Engineering Commons TEST",
+      "symbol": "TESTTEC"
     },
 
     "agreement": {

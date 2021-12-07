@@ -77,7 +77,9 @@ describe.only("Commons Upgrade Phase", () => {
       commonsEVMcrispr.app("disputable-voting.open")
     );
     hatchExecutorSigner = await impersonateAddress(
-      hatchEVMcrispr.app("dandelion-voting.1hive")
+      hatchEVMcrispr.appCache.has("dandelion-voting.1hive:0")
+        ? hatchEVMcrispr.app("dandelion-voting.1hive")
+        : hatchEVMcrispr.app("voting")
     );
   });
 
@@ -539,7 +541,8 @@ describe.only("Commons Upgrade Phase", () => {
 
       collateralToken = new Contract(
         COLLATERAL_TOKEN_ADDRESS,
-        [...erc20Abi, "function deposit() public payable"],
+        // [...erc20Abi, "function deposit() public payable"],
+        (await artifacts.readArtifact("MiniMeToken")).abi,
         signer
       );
       token = new Contract(await abc.token(), erc20Abi, signer);
@@ -550,12 +553,20 @@ describe.only("Commons Upgrade Phase", () => {
       const collateralTokenBuyer1 = collateralToken.connect(user1);
       const collateralTokenBuyer2 = collateralToken.connect(user2);
 
-      await collateralTokenBuyer1.deposit({
-        value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
-      });
-      await collateralTokenBuyer2.deposit({
-        value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
-      });
+      // await collateralTokenBuyer1.deposit({
+      //   value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
+      // });
+      // await collateralTokenBuyer2.deposit({
+      //   value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
+      // });
+      await collateralTokenBuyer1.generateTokens(
+        user1.address,
+        ACCOUNTS_INITIAL_COLLATERAL_BALANCE
+      );
+      await collateralTokenBuyer2.generateTokens(
+        user2.address,
+        ACCOUNTS_INITIAL_COLLATERAL_BALANCE
+      );
       await collateralTokenBuyer1.approve(abc.address, PURCHASE_AMOUNT);
       await collateralTokenBuyer2.approve(abc.address, PURCHASE_AMOUNT);
     });
