@@ -15,39 +15,13 @@ The script uses the [EVMcrispr](https://github.com/CommonsSwarm/EVMcrispr) to en
 
 1. Set the signer account by creating a `mnemonic.txt` file on the root project directory containing the account's seed phrase.
 
-2. Configure the following parameters on the `scripts/commons-upgrade.ts` file:
-
-   - `gardensDAOAddress`: The Gardens DAO address to be upgraded.
-   - `collateralTokenAddress`: Collateral token address to be used by the ABC.
-   - `hatchMigrationToolsAddress`: Migration Tools app address installed on the Hatch DAO.
-   - `entryTribute`: The entry tribute to be deducted from the buy orders made to the augmented bonding curve.
-   - `exitTribute`: The exit tribute to be deducted from the sell orders made to the augmented bonding curve.
-   - `reserveRatio`: The reserve ratio to be used for the gardens token buy and sell order calculations.
+2. Configure the parameters on the `params.json` file.
 
 3. Execute the script by running one of the following commands:
 
    ```sh
-   yarn run commons-upgrade-rinkeby
+   yarn run commons-upgrade
+   yarn run migration
+   yarn run token-claiming
+   yarn run abc-opening
    ```
-
-   or
-
-   ```sh
-   yarn run commons-upgrade-xdai
-   ```
-
-   The script will create a vote on the gardens' disputable voting app containing the encoded EVM script. It will also try to vote using the signer account.
-
-## Vote execution
-
-Once the commons upgrade voting has finished, you can execute the vote by running one of the following commands:
-
-```sh
-yarn run execute-latest-vote-rinkeby
-```
-
-or
-
-```sh
-yarn run execute-latest-vote-xdai
-```
