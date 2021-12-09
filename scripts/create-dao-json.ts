@@ -1,9 +1,11 @@
+import { TOKEN_FREEZE } from "../commons-config";
 import {
   garden,
   convictionVoting,
   collateralTokenAddress,
   advanced,
   taoVoting,
+  token,
 } from "../params.json";
 
 // Converts from 30 to 0.3
@@ -30,13 +32,11 @@ const json = {
   agreementContent: advanced.agreement.content,
   settlementPeriod: parseFloat(advanced.agreement.settlementPeriodDays),
   proposalDeposit:
-    (parseFloat(advanced.agreement.proposalDepositStable) *
-      parseFloat(advanced.garden.tokenInitialLiquidity)) /
-    parseFloat(advanced.garden.stableInitialLiquidity),
+    parseFloat(advanced.agreement.proposalDepositStable) /
+    parseFloat(token.openingPrice),
   challengeDeposit:
-    (parseFloat(advanced.agreement.challangeDepositStable) *
-      parseFloat(advanced.garden.tokenInitialLiquidity)) /
-    parseFloat(advanced.garden.stableInitialLiquidity),
+    parseFloat(advanced.agreement.challangeDepositStable) /
+    parseFloat(token.openingPrice),
   proposalDepositStable: parseFloat(advanced.agreement.proposalDepositStable),
   challengeDepositStable: parseFloat(advanced.agreement.challangeDepositStable),
   voteSupportRequired: toPct(taoVoting.supportRequired),
