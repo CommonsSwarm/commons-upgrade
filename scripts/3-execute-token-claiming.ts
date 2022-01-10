@@ -3,12 +3,7 @@ import ora from "ora";
 import { EVMcrispr } from "@1hive/evmcrispr";
 import { claimTokens } from "./actions";
 import { GARDEN_DAO_ADDRESS, HATCH_TOKEN_ADDRESS } from "../commons-config";
-import {
-  getAppContract,
-  getTokenHolders,
-  MAX_TX_GAS_LIMIT,
-  MAX_TX_GAS_PRICE,
-} from "../test/helpers";
+import { getAppContract, getTokenHolders } from "../test/helpers";
 
 let spinner = ora();
 
@@ -35,7 +30,7 @@ async function main() {
   await claimTokens(
     commonsMigrationTools.claimForMany,
     tokenHolderAddresses,
-    { gasLimit: MAX_TX_GAS_LIMIT, gasPrice: MAX_TX_GAS_PRICE },
+    {},
     console.log
   );
 }

@@ -16,7 +16,6 @@ async function main() {
   const signer = (await ethers.getSigners())[0];
 
   spinner = spinner.start(`Connect evmcrispr to DAO ${GARDEN_DAO_ADDRESS}`);
-
   const evmcrispr = await EVMcrispr.create(GARDEN_DAO_ADDRESS, signer);
   const hatchEVMcrispr = await EVMcrispr.create(HATCH_DAO_ADDRESS, signer);
 
@@ -47,7 +46,7 @@ async function main() {
     `Commons Upgrade script forwarded. Tx hash: ${txReceipt.transactionHash}`
   );
 
-  // Vote on the commons upgrade vote
+  // // Vote on the commons upgrade vote
   await vote(gardenContext);
 }
 
