@@ -7,7 +7,11 @@ import {
   VIRTUAL_BALANCE,
   VIRTUAL_SUPPLY,
 } from "../../commons-config";
-import { ABC_LABEL, COMMONS_POOL_AGENT_LABEL } from "../helpers/new-app-labels";
+import {
+  ABC_LABEL,
+  COMMONS_POOL_AGENT_LABEL,
+  ORIGINAL_AGENT_LABEL,
+} from "../helpers/new-app-labels";
 
 export const setUpABCActions = async (
   commonsEVMcrispr: EVMcrispr
@@ -32,13 +36,13 @@ export const initializeABCActions = async (
 ): Promise<ActionFunction[]> => {
   const actionFns = [
     commonsEVMcrispr.act(
-      COMMONS_POOL_AGENT_LABEL,
+      ORIGINAL_AGENT_LABEL,
       COLLATERAL_TOKEN_ADDRESS,
       "approve(address,uint256)",
       [ABC_LABEL, INITIAL_BUY]
     ),
     commonsEVMcrispr.act(
-      COMMONS_POOL_AGENT_LABEL,
+      ORIGINAL_AGENT_LABEL,
       ABC_LABEL,
       "makeBuyOrder(address,address,uint256,uint256)",
       [

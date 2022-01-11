@@ -4,6 +4,7 @@ import { Overrides } from "@ethersproject/contracts";
 import {
   COLLATERAL_TOKEN_ADDRESS,
   COMMONS_TRIBUTE,
+  INITIAL_BUY,
   VESTING_CLIFF_PERIOD,
   VESTING_COMPLETE_PERIOD,
   VESTING_START_DATE,
@@ -12,6 +13,7 @@ import {
   COMMONS_POOL_AGENT_LABEL,
   MIGRATION_TOOLS_LABEL,
   RESERVE_AGENT_LABEL,
+  ORIGINAL_AGENT_LABEL,
 } from "../helpers/new-app-labels";
 
 export const HOLDERS_PER_TRANSACTION = 10;
@@ -21,6 +23,14 @@ export const buildMigrationAction = async (
   commonsEVMcrispr: EVMcrispr
 ): Promise<ActionFunction[]> => {
   return [
+    hatchEVMcrispr.grant(["voting", "agent:1", "TRANSFER_ROLE"], "voting"),
+    hatchEVMcrispr
+      .exec("agent:1")
+      .transfer(
+        COLLATERAL_TOKEN_ADDRESS,
+        commonsEVMcrispr.app(ORIGINAL_AGENT_LABEL),
+        INITIAL_BUY
+      ),
     hatchEVMcrispr
       .exec("migration-tools-beta.open")
       .migrate(
