@@ -1,41 +1,40 @@
 {
   "hatch": {
-    "daoAddress": "0x7A06c1106908d952974Ca1dC2b66F8Cc7dF75DBb",
-    "tokenAddress": "0x0baa582f7d2447d14bdee83d26b6ac88bdf58beb",
+    "daoAddress": "0x5C204a6a0453F2B062f300e03cD7E8f4EB740B39",
+    "tokenAddress": "0xc3ef2b99a32ea47d4040492ce521221201008185",
     "voteDurationDays": "1"
   },
   "garden": {
-    "daoAddress": "0xF7ac40A5d0933E13b346ee611D9072B6095f43fC",
+    "daoAddress": "0x854EDac1f992F71a5F0EABBb016221064b6e4434",
     "seeds": {
-      "0xc125218F4Df091eE40624784caF7F47B9738086f": 1000,
-      "0xf632Ce27Ea72deA30d30C1A9700B6b3bCeAA05cF": 1000,
-      "0x81a8e13382D20cf24F44F50b6643064cd7A71A84": 1000
+      "0xc125218F4Df091eE40624784caF7F47B9738086f": 3000
     }
   },
   "collateralTokenAddress": "0x70be33ccef2d04d52ab5f1dabb15291f47b92da8",
   "token": {
-    "tokenFreezeWeeks": "52",
-    "tokenThawWeeks": "104",
-    "openingPrice": "1.2"
+    "tokenFreezeWeeks": "12",
+    "tokenThawWeeks": "52",
+    "openingPrice": "1"
   },
   "abc": {
-    "commonsTribute": "95",
-    "entryTribute": "0.75",
-    "exitTribute": "0.75"
+    "commonsTribute": "70",
+    "entryTribute": "8",
+    "exitTribute": "10",
+    "reserveRatio": "19.34"
   },
   "taoVoting": {
     "supportRequired": "88",
     "minQuorum": "0.8",
-    "voteDurationDays": "1.5",
-    "delegatedVotingPeriodDays": "0.5",
+    "voteDurationDays": "0.0069",
+    "delegatedVotingPeriodDays": "0",
     "quietEndingPeriodDays": "0",
     "quietEndingExtensionDays": "0",
     "executionDelayDays": "0"
   },
   "convictionVoting": {
-    "convictionGrowthDays": "20",
-    "minConviction": "2.25",
-    "spendingLimit": "9"
+    "convictionGrowthDays": "7",
+    "minConviction": "4",
+    "spendingLimit": "18"
   },
   "advanced": {
     "garden": {
@@ -54,9 +53,9 @@
 
     "agreement": {
       "title": "TEC Community Covenant",
-      "content": "ipfs:QmfLK4DPMUxvbh5N8UkHtk3ZWzdoPpsacfsqhCDqNPHM7i",
-      "proposalDepositStable": "250",
-      "challangeDepositStable": "500",
+      "content": "ipfs:QmNZFemSUnx8FjCHboLzx8vNLSSfTjWGKNZbZm5nTEErp7",
+      "proposalDepositStable": "200",
+      "challangeDepositStable": "400",
       "settlementPeriodDays": "5"
     },
     "convictionVoting": {

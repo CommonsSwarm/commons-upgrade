@@ -66,6 +66,13 @@ export const VESTING_CLIFF_PERIOD = 0;
 export const VESTING_COMPLETE_PERIOD = TOKEN_THAW;
 
 export const computeReserveRatio = async (commonsEVMcrispr: EVMcrispr) => {
+  const { reserveRatio } = abc;
+
+  // Return defined reserveRatio if found
+  if (reserveRatio) {
+    return Math.floor(ppm(reserveRatio) / 100);
+  }
+
   const reserve = getAppContract(RESERVE_AGENT_LABEL, commonsEVMcrispr);
   const tokenManager = getAppContract(
     "wrappable-hooked-token-manager.open:0",
