@@ -75,7 +75,7 @@ export const claimTokens = async (
           } to ${Math.min(
             i + HOLDERS_PER_TRANSACTION,
             tokenHolders.length
-          )} of a total of ${tokenHolders.length}.`
+          )} of a total of ${tokenHolders.length}. Tx hash: ${tx.hash}`
         );
       }
     } catch (e) {
