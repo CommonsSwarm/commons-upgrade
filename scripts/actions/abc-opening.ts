@@ -9,9 +9,8 @@ import {
 } from "../../commons-config";
 import { ABC_LABEL, COMMONS_POOL_AGENT_LABEL } from "../helpers/new-app-labels";
 
-export const buildABCSetUpActions = async (
-  commonsEVMcrispr: EVMcrispr,
-  expectedInitialBuyReturnAmount = BigNumber.from(0)
+export const setUpABCActions = async (
+  commonsEVMcrispr: EVMcrispr
 ): Promise<ActionFunction[]> => {
   const actionFns = [
     commonsEVMcrispr
@@ -22,6 +21,16 @@ export const buildABCSetUpActions = async (
         VIRTUAL_BALANCE,
         await computeReserveRatio(commonsEVMcrispr)
       ),
+  ];
+
+  return actionFns;
+};
+
+export const initializeABCActions = async (
+  commonsEVMcrispr: EVMcrispr,
+  expectedInitialBuyReturnAmount = BigNumber.from(0)
+): Promise<ActionFunction[]> => {
+  const actionFns = [
     commonsEVMcrispr.act(
       COMMONS_POOL_AGENT_LABEL,
       COLLATERAL_TOKEN_ADDRESS,

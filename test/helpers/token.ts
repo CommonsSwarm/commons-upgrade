@@ -1,12 +1,14 @@
 import { Address } from "@1hive/evmcrispr";
 import { BigNumber } from "@ethersproject/bignumber";
-import { ContractReceipt } from "@ethersproject/contracts";
+import { Contract, ContractReceipt } from "@ethersproject/contracts";
 import { addressesEqual } from ".";
 import { ERC20 } from "../../typechain";
 import {
   HATCH_TOKEN,
   HATCH_TOKEN_HOLDERS,
 } from "../fixtures/hatch-token-holders";
+
+const MM_TOKEN_VERSION = "MMT_0.1";
 
 export const approveTokenAmount = async (
   token: ERC20,
@@ -46,4 +48,13 @@ export const getTokenHolders = async (
         value: tokenHolder.value,
       }))
     );
+};
+
+export const isMiniMeToken = async (token: Contract): Promise<boolean> => {
+  try {
+    const version = await token.version();
+    return version === MM_TOKEN_VERSION;
+  } catch (err) {
+    return false;
+  }
 };

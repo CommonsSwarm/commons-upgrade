@@ -19,6 +19,7 @@ import {
   hasPermission as checkPermission,
   hasPermission,
   isAppInstalled as checkInstalledApp,
+  isMiniMeToken,
   isPermissionManager as checkPermissionManager,
   MAX_TX_GAS_LIMIT,
   PCT_BASE,
@@ -45,7 +46,8 @@ import {
   takeSnapshot,
 } from "../helpers/rpc";
 import {
-  buildABCSetUpActions,
+  initializeABCActions,
+  setUpABCActions,
   buildCommonsUpgradeActions,
   buildMigrationAction,
   claimTokens,
@@ -473,6 +475,31 @@ describe.only("Commons Upgrade Phase", () => {
     let commonPoolBalanceBeforeInitialBuy: BigNumber;
     let expectedInitialBuyReturnAmount: BigNumber;
 
+    const generateCollateral = async (
+      collateralToken: Contract,
+      holders: SignerWithAddress[],
+      amount: BigNumber
+    ) => {
+      if (await isMiniMeToken(collateralToken)) {
+        const controllerAddress = await collateralToken.controller();
+        const controllerSigner = await impersonateAddress(controllerAddress);
+
+        await Promise.all(
+          holders.map((h) =>
+            collateralToken
+              .connect(controllerSigner)
+              .generateTokens(h.address, amount)
+          )
+        );
+      } else {
+        await Promise.all(
+          holders.map((h) =>
+            collateralToken.connect(h).deposit({ value: amount })
+          )
+        );
+      }
+    };
+
     const calculatePurchaseReturn = async (
       purchaseAmount: BigNumber
     ): Promise<BigNumber> => {
@@ -541,8 +568,10 @@ describe.only("Commons Upgrade Phase", () => {
 
       collateralToken = new Contract(
         COLLATERAL_TOKEN_ADDRESS,
-        // [...erc20Abi, "function deposit() public payable"],
-        (await artifacts.readArtifact("MiniMeToken")).abi,
+        [
+          "function deposit() public payable",
+          ...(await artifacts.readArtifact("MiniMeToken")).abi,
+        ],
         signer
       );
       token = new Contract(await abc.token(), erc20Abi, signer);
@@ -553,29 +582,18 @@ describe.only("Commons Upgrade Phase", () => {
       const collateralTokenBuyer1 = collateralToken.connect(user1);
       const collateralTokenBuyer2 = collateralToken.connect(user2);
 
-      // await collateralTokenBuyer1.deposit({
-      //   value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
-      // });
-      // await collateralTokenBuyer2.deposit({
-      //   value: ACCOUNTS_INITIAL_COLLATERAL_BALANCE,
-      // });
-      await collateralTokenBuyer1.generateTokens(
-        user1.address,
+      await generateCollateral(
+        collateralToken,
+        [user1, user2],
         ACCOUNTS_INITIAL_COLLATERAL_BALANCE
       );
-      await collateralTokenBuyer2.generateTokens(
-        user2.address,
-        ACCOUNTS_INITIAL_COLLATERAL_BALANCE
-      );
+
       await collateralTokenBuyer1.approve(abc.address, PURCHASE_AMOUNT);
       await collateralTokenBuyer2.approve(abc.address, PURCHASE_AMOUNT);
     });
 
     before("Execute the ABC set up actions", async () => {
       reserveRatio = await computeReserveRatio(commonsEVMcrispr);
-      expectedInitialBuyReturnAmount = await calculatePurchaseReturn(
-        INITIAL_BUY
-      );
 
       /**
        * We need to take into account the common pool initial liquidity minted
@@ -585,19 +603,34 @@ describe.only("Commons Upgrade Phase", () => {
         commonPool.address
       );
 
-      const actionFns = await buildABCSetUpActions(
-        commonsEVMcrispr,
-        expectedInitialBuyReturnAmount
-      );
+      const actionFns = await setUpABCActions(commonsEVMcrispr);
       await executeActions(actionFns, commonsExecutorSigner);
     });
 
-    it("should make the initial buy", async () => {
-      const commonsPoolBalanceAfter = await token.balanceOf(commonPool.address);
+    describe("when making the initial buy", () => {
+      before("Execute initial buy action", async () => {
+        expectedInitialBuyReturnAmount = await calculatePurchaseReturn(
+          INITIAL_BUY
+        );
 
-      expect(
-        commonsPoolBalanceAfter.sub(commonPoolBalanceBeforeInitialBuy)
-      ).to.equal(expectedInitialBuyReturnAmount);
+        const actionFns = await initializeABCActions(
+          commonsEVMcrispr,
+          expectedInitialBuyReturnAmount
+        );
+        await executeActions(actionFns, commonsExecutorSigner);
+
+        snapshotId = await takeSnapshot();
+      });
+
+      it("should make the initial buy correctly", async () => {
+        const commonsPoolBalanceAfter = await token.balanceOf(
+          commonPool.address
+        );
+
+        expect(
+          commonsPoolBalanceAfter.sub(commonPoolBalanceBeforeInitialBuy)
+        ).to.equal(expectedInitialBuyReturnAmount);
+      });
     });
 
     describe("when making a purchase order", () => {

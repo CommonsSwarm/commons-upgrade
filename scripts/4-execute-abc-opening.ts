@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import ora from "ora";
 import { EVMcrispr } from "@1hive/evmcrispr";
-import { buildABCSetUpActions } from "./actions";
+import { initializeABCActions, setUpABCActions } from "./actions";
 import { GARDEN_DAO_ADDRESS } from "../commons-config";
 
 let spinner = ora();
@@ -19,7 +19,10 @@ async function main() {
 
   spinner = spinner.start(`Forward abc set up actions`);
 
-  const abcActionFns = await buildABCSetUpActions(commonsEVMcrispr);
+  const abcActionFns = [
+    ...(await setUpABCActions(commonsEVMcrispr)),
+    ...(await initializeABCActions(commonsEVMcrispr)),
+  ];
 
   const receipt = await commonsEVMcrispr.forward(
     abcActionFns,
