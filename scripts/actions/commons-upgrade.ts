@@ -83,6 +83,11 @@ export const buildCommonsUpgradeActions = async (
         [
           "disputable-voting.open",
           "disputable-voting.open",
+          "CHANGE_QUIET_ENDING_ROLE",
+        ],
+        [
+          "disputable-voting.open",
+          "disputable-voting.open",
           "CHANGE_DELEGATED_VOTING_PERIOD_ROLE",
         ],
         [
