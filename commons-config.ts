@@ -48,6 +48,12 @@ export const DELEGATED_VOTING_PERIOD = Math.floor(
 export const EXECUTION_DELAY = Math.floor(
   parseFloat(taoVoting.executionDelayDays) * DAY
 );
+export const QUIET_ENDING_PERIOD = Math.floor(
+  parseFloat(taoVoting.quietEndingPeriodDays) * DAY
+);
+export const QUIET_ENDING_EXTENSION = Math.floor(
+  parseFloat(taoVoting.quietEndingExtensionDays) * DAY
+);
 
 // Advanced Settings
 export const VIRTUAL_SUPPLY = toDecimals(advanced.abc.virtualSupply);

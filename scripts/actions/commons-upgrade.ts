@@ -9,6 +9,8 @@ import {
   ENTRY_TRIBUTE,
   EXECUTION_DELAY,
   EXIT_TRIBUTE,
+  QUIET_ENDING_PERIOD,
+  QUIET_ENDING_EXTENSION,
   VOTE_DURATION,
 } from "../../commons-config";
 import { getAppContract } from "../../test/helpers";
@@ -124,6 +126,12 @@ export const buildCommonsUpgradeActions = async (
     commonsEVMcrispr
       .exec("disputable-voting.open")
       .changeDelegatedVotingPeriod(DELEGATED_VOTING_PERIOD),
+    commonsEVMcrispr
+      .exec("disputable-voting.open")
+      .changeQuietEndingConfiguration(
+        QUIET_ENDING_PERIOD,
+        QUIET_ENDING_EXTENSION
+      ),
     commonsEVMcrispr
       .exec("disputable-voting.open")
       .changeExecutionDelay(EXECUTION_DELAY),

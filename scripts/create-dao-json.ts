@@ -43,8 +43,8 @@ const json = {
   voteMinAcceptanceQuorum: toPct(taoVoting.minQuorum),
   voteDurationDays: 0.003,
   delegatedVotingPeriodDays: 0,
-  voteQuietEndingPeriodDays: parseFloat(taoVoting.quietEndingPeriodDays),
-  voteQuietEndingExtensionDays: parseFloat(taoVoting.quietEndingExtensionDays),
+  voteQuietEndingPeriodDays: 0,
+  voteQuietEndingExtensionDays: 0,
   voteExecutionDelayDays: 0,
 };
 
