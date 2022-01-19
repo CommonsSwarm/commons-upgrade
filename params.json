@@ -1,45 +1,46 @@
 {
   "hatch": {
-    "daoAddress": "0x5C204a6a0453F2B062f300e03cD7E8f4EB740B39",
-    "tokenAddress": "0xc3ef2b99a32ea47d4040492ce521221201008185",
-    "voteDurationDays": "1"
+    "daoAddress": "0x4625c2c3E1Bc9323CC1A9dc312F3188e8dE83f42",
+    "tokenAddress": "0x799844141C2627bD195c89c3A0c71341d0314c55",
+    "voteDurationDays": "6"
   },
   "garden": {
-    "daoAddress": "0x854EDac1f992F71a5F0EABBb016221064b6e4434",
+    "daoAddress": "0x1Fc7E8D8e4Bbbef77a4D035AEc189373b52125A8",
     "seeds": {
-      "0xc125218F4Df091eE40624784caF7F47B9738086f": 3000
+      "0xF41dEFf41016216346270e302DC0a5Dd4913DAdA": 1000,
+      "0x2E96053C70a92D9771c076E11fe4dDa87A989fDD": 600
     }
   },
-  "collateralTokenAddress": "0x70be33ccef2d04d52ab5f1dabb15291f47b92da8",
+  "collateralTokenAddress": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d",
   "token": {
-    "tokenFreezeWeeks": "12",
+    "tokenFreezeWeeks": "26",
     "tokenThawWeeks": "52",
     "openingPrice": "1"
   },
   "abc": {
-    "commonsTribute": "70",
-    "entryTribute": "8",
-    "exitTribute": "10",
-    "reserveRatio": "19.34"
+    "commonsTribute": "69",
+    "entryTribute": "22",
+    "exitTribute": "2",
+    "reserveRatio": "19.84"
   },
   "taoVoting": {
-    "supportRequired": "88",
-    "minQuorum": "0.8",
-    "voteDurationDays": "0.0069",
-    "delegatedVotingPeriodDays": "0",
-    "quietEndingPeriodDays": "0",
-    "quietEndingExtensionDays": "0",
-    "executionDelayDays": "0"
+    "supportRequired": "85",
+    "minQuorum": "10",
+    "voteDurationDays": "5",
+    "delegatedVotingPeriodDays": "3",
+    "quietEndingPeriodDays": "3",
+    "quietEndingExtensionDays": "2",
+    "executionDelayDays": "0.5"
   },
   "convictionVoting": {
     "convictionGrowthDays": "7",
     "minConviction": "4",
-    "spendingLimit": "18"
+    "spendingLimit": "11"
   },
   "advanced": {
     "garden": {
       "stableInitialLiquidity": "100",
-      "tokenInitialLiquidity": "1"
+      "tokenInitialLiquidity": "100"
     },
     "abc": {
       "virtualSupply": "1",
@@ -47,13 +48,13 @@
       "initialBuy": "250000"
     },
     "token": {
-      "name": "Token Engineering Commons TEST",
-      "symbol": "TESTTEC"
+      "name": "Token Engineering Commons",
+      "symbol": "TEC"
     },
 
     "agreement": {
       "title": "TEC Community Covenant",
-      "content": "ipfs:QmNZFemSUnx8FjCHboLzx8vNLSSfTjWGKNZbZm5nTEErp7",
+      "content": "ipfs:QmfLK4DPMUxvbh5N8UkHtk3ZWzdoPpsacfsqhCDqNPHM7i",
       "proposalDepositStable": "200",
       "challangeDepositStable": "400",
       "settlementPeriodDays": "5"

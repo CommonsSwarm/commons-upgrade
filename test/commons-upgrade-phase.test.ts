@@ -85,7 +85,7 @@ describe.only("Commons Upgrade Phase", () => {
     );
   });
 
-  describe("STEP 1: when executing the commons upgrade script", async () => {
+  describe.skip("STEP 1: when executing the commons upgrade script", async () => {
     const isAppInstalled = async (
       app: LabeledAppIdentifier,
       expectedRepo: string
@@ -298,7 +298,7 @@ describe.only("Commons Upgrade Phase", () => {
     });
   });
 
-  describe("STEP 2: when performing the Hatch migration", () => {
+  describe.skip("STEP 2: when performing the Hatch migration", () => {
     let newVault1: Contract;
     let newVault2: Contract;
 
@@ -523,7 +523,9 @@ describe.only("Commons Upgrade Phase", () => {
       );
     };
 
-    const calculateSaleReturn = async (saleAmount: BigNumber) => {
+    const calculateSaleReturn = async (
+      saleAmount: BigNumber
+    ): Promise<BigNumber> => {
       const tokenSupply = await token.totalSupply();
       const reserveCollateralBalance = await collateralToken.balanceOf(
         commonsEVMcrispr.app(RESERVE_AGENT_LABEL)
@@ -609,6 +611,21 @@ describe.only("Commons Upgrade Phase", () => {
 
     describe("when making the initial buy", () => {
       before("Execute initial buy action", async () => {
+        console.log(
+          "price before initial buy",
+          parseFloat((await calculateSaleReturn(toDecimals(1))).toString()) /
+            1e18
+        );
+        console.log(
+          "reserve balance before initial buy",
+          (await collateralToken.balanceOf(reserve.address)).toString() / 1e18
+        );
+        console.log(
+          "common pool balance before initial buy",
+          (await collateralToken.balanceOf(commonPool.address)).toString() /
+            1e18
+        );
+
         expectedInitialBuyReturnAmount = await calculatePurchaseReturn(
           INITIAL_BUY
         );
@@ -623,6 +640,20 @@ describe.only("Commons Upgrade Phase", () => {
       });
 
       it("should make the initial buy correctly", async () => {
+        console.log(
+          "price after initial buy",
+          parseFloat((await calculateSaleReturn(toDecimals(1))).toString()) /
+            1e18
+        );
+        console.log(
+          "reserve balance after initial buy",
+          (await collateralToken.balanceOf(reserve.address)).toString() / 1e18
+        );
+        console.log(
+          "common pool balance after initial buy",
+          (await collateralToken.balanceOf(commonPool.address)).toString() /
+            1e18
+        );
         const commonsPoolBalanceAfter = await token.balanceOf(
           commonPool.address
         );

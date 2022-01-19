@@ -51,7 +51,7 @@ const forking: HardhatNetworkForkingConfig = {
 
   // XDAI
   url: "https://xdai-archive.blockscout.com",
-  blockNumber: 20037128,
+  blockNumber: 20194092,
   enabled: true,
 };
 

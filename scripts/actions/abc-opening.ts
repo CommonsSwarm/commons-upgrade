@@ -11,12 +11,27 @@ import {
   ABC_LABEL,
   COMMONS_POOL_AGENT_LABEL,
   ORIGINAL_AGENT_LABEL,
+  RESERVE_AGENT_LABEL,
 } from "../helpers/new-app-labels";
 
 export const setUpABCActions = async (
   commonsEVMcrispr: EVMcrispr
 ): Promise<ActionFunction[]> => {
   const actionFns = [
+    commonsEVMcrispr.grant(
+      ["disputable-voting.open", COMMONS_POOL_AGENT_LABEL, "TRANSFER_ROLE"],
+      "disputable-voting.open"
+    ),
+    commonsEVMcrispr
+      .exec(COMMONS_POOL_AGENT_LABEL)
+      .transfer(COLLATERAL_TOKEN_ADDRESS, ORIGINAL_AGENT_LABEL, "15000e18"),
+    commonsEVMcrispr
+      .exec(COMMONS_POOL_AGENT_LABEL)
+      .transfer(
+        COLLATERAL_TOKEN_ADDRESS,
+        RESERVE_AGENT_LABEL,
+        String(395357.44 - 393832.93172) + "e18"
+      ),
     commonsEVMcrispr
       .exec(ABC_LABEL)
       .addCollateralToken(
